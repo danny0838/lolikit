@@ -10,9 +10,9 @@ Acturally, Loli is small and cute.
 
 
 
-## What's the Loli's Rules and Philosophy?
+## Where can I find the detail of Loli project?
 
-[See Here](https://bitbucket.org/civalin/lolinote/wiki/Rules%20&%20Philosophy)
+[See Here](https://bitbucket.org/civalin/lolinote/wiki)
 
 
 
