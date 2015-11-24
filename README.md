@@ -12,7 +12,7 @@ Acturally, Loli is small and cute.
 
 ## What's the Loli's Rules and Philosophy?
 
-[See Here](https://bitbucket.org/civalin/lolikit/wiki/Rules%20&%20Philosophy)
+[See Here](https://bitbucket.org/civalin/lolinote/wiki/Rules%20&%20Philosophy)
 
 
 
