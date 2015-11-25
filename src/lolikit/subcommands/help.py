@@ -73,7 +73,9 @@ class HelpCommand(command.Command):
             4. All notes in a multi-level directory tree.
             5. Note's order is the filename string order.
             6. Root folder should have a directory which be named as ".loli".
-            7. Note content must encoding as "utf8".""")
+            7. Note content must encoding as "utf8".
+
+            Check https://bitbucket.org/civalin/lolinote for more detail.""")
         print(message)
 
     def show_config(self):
