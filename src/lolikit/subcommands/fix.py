@@ -76,6 +76,7 @@ class FixCommand(command.Command):
             self.__deal_empty_dirs(args)
             self.__deal_danger_paths(args)
             self.__deal_inconsistent_newline_paths(args)
+            self.__deal_resource_md_dir_named_inconsistent(args)
 
     def __get_encoding_error_files(self):
         files = []
@@ -266,3 +267,29 @@ class FixCommand(command.Command):
                                       ' {}'),
                     confirm_message='Change newline mode of files? (y/n)> ',
                     resolve_func=self.__universalize_newline)
+
+    def __consistent_resourced_dirname(self, paths, verbose):
+        print('  Renaming resourced dirname...')
+        count = 0
+        for path in paths:
+            parent = path.parent
+            new_parent = parent.with_name(path.stem)
+            if new_parent.exists():
+                print('    [ABOUT]: "{}" be occupied!'.format(new_parent))
+                continue
+            else:
+                parent.rename(new_parent)
+            if verbose:
+                print('    "{}"  >>  "{}"'.format(parent, new_parent.name))
+            count += 1
+        print('\n  [RESOLVED] Changed files: {}'.format(count))
+
+    def __deal_resource_md_dir_named_inconsistent(self, args):
+        paths = self.get_all_resourced_md_paths()
+        # paths = [p for p in paths if p.stem != p.parent.name]
+        self.__deal(args=args,
+                    paths=paths,
+                    detected_message=('[DETECTED] Recource folder name'
+                                      ' inconsistent: {}'),
+                    confirm_message='Rename folder? (y/n)> ',
+                    resolve_func=self.__consistent_resourced_dirname)

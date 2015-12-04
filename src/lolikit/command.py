@@ -27,8 +27,6 @@
 import abc
 import re
 
-import chardet
-
 
 class CanNotDetectEncodingError(Exception):
     pass
@@ -94,6 +92,16 @@ class Command(metaclass=abc.ABCMeta):
 
     def get_all_md_paths(self):
         paths = [p for p in self.rootdir.rglob('*.md') if p.is_file()]
+        return self.ignore_filter(paths)
+
+    def get_all_resourced_md_paths(self):
+        paths = [p for p in self.rootdir.rglob('*.md')
+                 if all((
+                     p.is_file(),
+                     all(False for p2 in p.parent.rglob('*.md') if p2 != p),
+                     any(True for p2 in p.parent.rglob('*')
+                         if p2 != p and p2.is_file())
+                     ))]
         return self.ignore_filter(paths)
 
     # def get_content_and_encoding(self, path):
