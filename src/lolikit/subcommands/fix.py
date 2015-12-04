@@ -269,7 +269,7 @@ class FixCommand(command.Command):
                     resolve_func=self.__universalize_newline)
 
     def __consistent_resourced_dirname(self, paths, verbose):
-        print('  Renaming resourced dirname...')
+        print('  dirname renaming...')
         count = 0
         for path in paths:
             parent = path.parent
@@ -282,11 +282,11 @@ class FixCommand(command.Command):
             if verbose:
                 print('    "{}"  >>  "{}"'.format(parent, new_parent.name))
             count += 1
-        print('\n  [RESOLVED] Changed files: {}'.format(count))
+        print('\n  [RESOLVED] Changed dirname: {}'.format(count))
 
     def __deal_resource_md_dir_named_inconsistent(self, args):
         paths = self.get_all_resourced_md_paths()
-        # paths = [p for p in paths if p.stem != p.parent.name]
+        paths = [p for p in paths if p.stem != p.parent.name]
         self.__deal(args=args,
                     paths=paths,
                     detected_message=('[DETECTED] Recource folder name'
