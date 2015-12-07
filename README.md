@@ -24,7 +24,12 @@ Currently the lolikit include the following sub-command...
 
 * find - find some notes which contain some special pattern
 * list - lists some notes that have recently be changed
-* fix  - point out & help to fix the loli project defect. such like file encoding, check the newline format, avoid danger character in filename, remove empty directory. etc.
+* fix  - point out & help to fix the loli project defect. such like...
+    * file encoding
+    * check the newline format
+    * avoid danger character in filename
+    * remove empty directory.
+    * resourced note directory rename.
 
 
 
@@ -58,7 +63,7 @@ windows:
 
 # How to use?
 
-Change current working directory into you Loli project folder. Then type command like... 
+Change current working directory into you Loli project folder (or sub-folder). Then type command like... 
 
     loli --help
     loli find <keyword>
@@ -83,8 +88,8 @@ Currently the lolikit's implement just sample ignore the BOM.
 
 
 
-## What the newline format?
+## What's the newline format?
 
-Lolikit wish you to use only one kind of newline format (`\n`, `\r`, `\r\n`). But you can decided which one you want to use.
+Lolikit wish you to use only one kind of newline format (one of `\n`, `\r`, `\r\n`). But you can decided which one you want to use. See `loli help --config`
 
 You can run `loli fix` to check inconsistent of the newline format.

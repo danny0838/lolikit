@@ -54,13 +54,13 @@ DEFAULT_CONFIG = OD((
         ('editor_command', _get_default_editor_command()),
         ('show_reverse', 'no'),
         ('page_size', 10),
-        ('ignore_patterns', ''),   # multiple patterns split by newline
-                                   # start direct under the rootdir
-                                   # use regex, will auto include:
-                                   #   '^.loli($|' + os.sep + ')'
+        ('ignore_patterns', ''),
+        # ^ multiple patterns split by newline
+        # all pathname string start with the rootdir
+        # auto include: '^.loli($|' + os.sep + ')'
         ('newline_mode', _get_default_newline_mode()),
-                                   # 'windows', 'mac', 'posix'
-                                   # default == current system mode
+        # ^ 'windows', 'mac', 'posix'
+        # default == current system mode
         ))),
     ('find', OD((
         ('output_format', '{title}  <<  {parent_dirname}'),
@@ -70,7 +70,6 @@ DEFAULT_CONFIG = OD((
             '[{mtime:%%m/%%d %%H:%%M}] {title}'),
         ))),
     ('fix', OD((
-        ('small_size', 50),
         ('danger_pathname_chars', '\\/:"*?<>|'),
         ('danger_pathname_chars_fix_to', '='),
         ))),

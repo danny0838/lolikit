@@ -46,8 +46,9 @@ class FixCommand(command.Command):
                         'Support auto fixing:\n'
                         '  - rename unsafe pathname\n'
                         '  - remove empty note and directory\n'
-                        '  - fix inconsistent newline\n\n'
-                        'fix tool can also detect a part of non-utf8'
+                        '  - fix inconsistent newline\n'
+                        '  - fix inconsistent resourced note\'s dirname\n\n'
+                        'This tool can also detect a part of non-utf8'
                         ' files (but maybe not all) and cannot fix it'
                         ' automatically.')
 
@@ -61,7 +62,7 @@ class FixCommand(command.Command):
 
         parser.add_argument(
             '-y', dest='always_yes', action='store_true',
-            help='auto resolve problems without confirm')
+            help='auto resolve problems without confirm (must use with -r)')
 
     def run(self, args):
         enc_error_paths = self.__get_encoding_error_files()
@@ -109,7 +110,7 @@ class FixCommand(command.Command):
                     resolve_func(paths, args.verbose)
 
     def __get_small_size_paths(self):
-        small_size = int(self.config[self.get_name()]['small_size'])
+        small_size = 50
         small_size_path = [path for path in self.get_all_md_paths()
                            if path.stat().st_size < small_size]
         return small_size_path

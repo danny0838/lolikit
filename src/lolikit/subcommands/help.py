@@ -190,13 +190,6 @@ class HelpCommand(command.Command):
 
             ### [fix] section ###
 
-            #### small_size ####
-
-            Define how small files will be check it is "real empty" or not.
-
-            - default: {default[fix][small_size]}
-            - current: {current[fix][small_size]}
-
             #### danger_pathname_chars ####
 
             Define what chars is danger in pathname.
