@@ -84,7 +84,7 @@ MIT LICENSE
 
 ## utf8 with BOM?
 
-Currently the lolikit's implement just sample ignore the BOM.
+Currently the lolikit's implement just sample ignore the BOM. But I highly recommended DO NOT contain BOM when you try to saving.
 
 
 
