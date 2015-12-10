@@ -125,29 +125,37 @@ class NoteListSelector():
         return min(max(min_page, want_page), max_page)
 
     def print_and_open(self, page):
-        def get_selected_note(page):
-            page = self.restrict_page(page)
-            notes = self.get_notes_in_page(page)
+        def print_help():
+            print('==========================================\n'
+                  '  How to use:\n'
+                  '    * number  - select one item\n'
+                  '    * n       - next page\n'
+                  '    * p       - previous page\n'
+                  '    * h, help - show this help message\n'
+                  '==========================================')
+            input('press enter to continue> ')
+
+        def get_input(page):
             if page == 1:
                 prompt = "open> "
             else:
                 prompt = "page {}/{} open> ".format(
                     page, self.get_page_count())
             user_input = input(prompt)
+            return user_input
+
+        def get_selected_note(page):
+            page = self.restrict_page(page)
+            notes = self.get_notes_in_page(page)
+            user_input = get_input(page)
+
             if user_input:
                 if user_input == 'n':
                     return self.print_and_open(page + 1)
                 elif user_input == 'p':
                     return self.print_and_open(page - 1)
                 elif user_input in ('h', 'help'):
-                    print('==========================================\n'
-                          '  How to use:\n'
-                          '    * number  - select one item\n'
-                          '    * n       - next page\n'
-                          '    * p       - previous page\n'
-                          '    * h, help - show this help message\n'
-                          '==========================================')
-                    input('continue> ')
+                    print_help()
                     return self.print_and_open(page)
                 else:
                     try:
