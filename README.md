@@ -93,3 +93,11 @@ Currently the lolikit's implement just sample ignore the BOM. But I highly recom
 Lolikit wish you to use only one kind of newline format (one of `\n`, `\r`, `\r\n`). But you can decided which one you want to use. See `loli help --config`
 
 You can run `loli fix` to check inconsistent of the newline format.
+
+
+
+# Changelog
+
+## Version 1.1
+
+- Accroding the rules version 2015-15-17 slight change the resourced notes detecting algorithm.

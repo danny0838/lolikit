@@ -99,7 +99,7 @@ class Command(metaclass=abc.ABCMeta):
                  if all((
                      p.is_file(),
                      all(False for p2 in p.parent.rglob('*.md') if p2 != p),
-                     any(True for p2 in p.parent.rglob('*')
+                     any(True for p2 in p.parent.glob('*')
                          if p2 != p and p2.is_file())
                      ))]
         return self.ignore_filter(paths)
