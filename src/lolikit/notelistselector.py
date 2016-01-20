@@ -89,11 +89,11 @@ class Note():
 
 
 class NoteListSelector():
-    def __init__(self, config, notes, page_size, output_format):
+    def __init__(self, notes, show_reverse,
+                 editor_command, page_size, output_format):
         self.notes = notes
-        self.config = config
-        self.show_reverse = config['default'].getboolean('show_reverse')
-        self.editor_command = config['default']['editor_command']
+        self.show_reverse = show_reverse
+        self.editor_command = editor_command
         self.page_size = page_size
         self.output_format = output_format
 

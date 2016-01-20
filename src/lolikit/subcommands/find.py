@@ -51,6 +51,11 @@ class FindCommand(command.Command):
             default=int(self.config['default']['page_size']),
             help='override each page\'s items count')
 
+        parser.add_argument(
+            '-e', metavar='EDITOR_COMMAND', dest='editor_command', type=str,
+            default=self.config['default']['editor_command'],
+            help='override default editor_command = %(default)s')
+
     def run(self, args):
         scored_notes = [
             (self.calculate_score(*data),
@@ -61,8 +66,9 @@ class FindCommand(command.Command):
 
         if len(notes) > 0:
             nls = NLS.NoteListSelector(
-                config=self.config,
                 notes=notes,
+                show_reverse=self.config['default'].getboolean('show_reverse'),
+                editor_command=args.editor_command,
                 page_size=args.page_size,
                 output_format=self.config[self.get_name()]['output_format'])
             nls.print_and_open(page=0)

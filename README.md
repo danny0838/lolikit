@@ -98,6 +98,10 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 # Changelog
 
+## Version 1.2
+
+  - command: `find` and `list` now have a `-e` option to assign editor_command.
+
 ## Version 1.1
 
-- Accroding the rules version 2015-15-17 slight change the resourced notes detecting algorithm.
+  - Accroding the rules version 2015-15-17, slight change the resourced notes detecting algorithm.
