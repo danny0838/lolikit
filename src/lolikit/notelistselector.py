@@ -112,9 +112,15 @@ class NoteListSelector():
             print(('{index:>2}) ' + self.output_format).format(
                 index=index, **note.get_properties()))
 
-    def open_editor(self, note):
-        cmd_str = self.editor_command.format(note.absolute_path)
-        subprocess.call(cmd_str, shell=True)
+    def open_editor(self, note, executable=None):
+        if executable:
+            try:
+                subprocess.call([executable, note.absolute_path])
+            except FileNotFoundError:
+                print('executable: "{}" not found. cancel.'.format(executable))
+        else:
+            cmd_str = self.editor_command.format(note.absolute_path)
+            subprocess.call(cmd_str, shell=True)
 
     def get_page_count(self):
         return int(len(self.notes) / self.page_size) + 1
@@ -126,25 +132,39 @@ class NoteListSelector():
 
     def print_and_open(self, page):
         def print_help():
-            print('==========================================\n'
+            print('=========================================================\n'
                   '  How to use:\n'
-                  '    * number  - select one item\n'
-                  '    * n       - next page\n'
-                  '    * p       - previous page\n'
-                  '    * h, help - show this help message\n'
-                  '==========================================')
-            input('press enter to continue> ')
+                  '    * <number>    - open one item\n'
+                  '    * <number> @ <executable>\n'
+                  '                  - open one item with special executable\n'
+                  '    * n           - next page\n'
+                  '    * p           - previous page\n'
+                  '    * f           - first page\n'
+                  '    * l           - last page\n'
+                  '    * ?, h, help  - show this help message\n'
+                  '    * <else>      - exit\n'
+                  '=========================================================')
+            # input('press enter to continue> ')
 
         def get_input(page):
             if page == 1:
                 prompt = "open> "
             else:
-                prompt = "page {}/{} open> ".format(
+                prompt = "[page {}/{}] open> ".format(
                     page, self.get_page_count())
             user_input = input(prompt)
             return user_input
 
         def get_selected_note(page):
+            def get_open_note(number_str, notes):
+                try:
+                    open_number = int(number_str)
+                    if open_number <= 0 or open_number > len(notes):
+                        return None
+                    return notes[open_number - 1]
+                except:
+                    return None
+
             page = self.restrict_page(page)
             notes = self.get_notes_in_page(page)
             user_input = get_input(page)
@@ -154,19 +174,25 @@ class NoteListSelector():
                     return self.print_and_open(page + 1)
                 elif user_input == 'p':
                     return self.print_and_open(page - 1)
-                elif user_input in ('h', 'help'):
+                elif user_input == 'f':
+                    return self.print_and_open(1)
+                elif user_input == 'l':
+                    return self.print_and_open(self.get_page_count())
+                elif user_input in ('h', 'help', '?'):
                     print_help()
                     return self.print_and_open(page)
                 else:
-                    try:
-                        open_number = int(user_input)
-                        if open_number <= 0 or open_number > len(notes):
-                            return None
-                        return notes[open_number - 1]
-                    except:
-                        return None
+                    result = user_input.split('@', 1)
+                    result = [item.strip() for item in result]
+                    open_note = get_open_note(result[0], notes)
+                    executable = None
+                    if len(result) == 2:
+                        executable = result[1]
+                    return open_note, executable
 
         self.print(page)
-        note = get_selected_note(page)
-        if note:
-            self.open_editor(note)
+        result = get_selected_note(page)
+        if result:
+            note, executable = result
+            if note:
+                self.open_editor(note, executable)

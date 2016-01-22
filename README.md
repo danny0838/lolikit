@@ -100,7 +100,7 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 ## Version 1.2
 
-  - command: `find` and `list` now have a `-e` option to assign editor_command.
+  - Enhanced: note selector can assign executable as opener.
 
 ## Version 1.1
 
