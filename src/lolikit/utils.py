@@ -88,10 +88,7 @@ def get_rootdir():
             if current_dir != current_dir.parent:
                 return checkdirs(current_dir.parent)
             else:
-                print('abort: cannot find ".loli" folder'
-                      ' in current or any higher directories.\n'
-                      'you may want to create a empty one by yourself.')
-                sys.exit(1)
+                return None
 
     current_dir = pathlib.Path(os.getcwd())
     return checkdirs(current_dir)
