@@ -26,6 +26,7 @@
 
 import subprocess
 import datetime as DT
+import cmd
 
 
 class Note():

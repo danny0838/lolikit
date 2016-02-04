@@ -48,6 +48,7 @@ class ListCommand(command.Command):
             help='override each page\'s items count')
 
     def run(self, args):
+        self.require_rootdir()
         notes = [NLS.Note(path, self.rootdir)
                  for path in self.get_all_md_paths()]
         notes.sort(

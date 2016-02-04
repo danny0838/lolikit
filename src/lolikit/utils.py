@@ -45,9 +45,10 @@ def get_config(rootdir):
             os.path.expanduser('~')) / '.lolikitrc'
         if user_lolikitrc.is_file():
             config.read(str(user_lolikitrc))
-        project_lolikitrc = rootdir / '.loli' / 'lolikitrc'
-        if project_lolikitrc.is_file():
-            config.read(str(project_lolikitrc))
+        if rootdir is not None:
+            project_lolikitrc = rootdir / '.loli' / 'lolikitrc'
+            if project_lolikitrc.is_file():
+                config.read(str(project_lolikitrc))
         return config
 
     def expand_config(config):

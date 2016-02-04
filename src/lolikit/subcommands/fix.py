@@ -65,6 +65,7 @@ class FixCommand(command.Command):
             help='auto resolve problems without confirm (must use with -r)')
 
     def run(self, args):
+        self.require_rootdir()
         enc_error_paths = self.__get_encoding_error_files()
         if enc_error_paths:
             print('ALERT: Following files are *NOT* encoding as utf8.\n'

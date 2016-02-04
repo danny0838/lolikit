@@ -52,6 +52,7 @@ class FindCommand(command.Command):
             help='override each page\'s items count')
 
     def run(self, args):
+        self.require_rootdir()
         scored_notes = [
             (self.calculate_score(*data),
              NLS.Note(data[0], self.rootdir))

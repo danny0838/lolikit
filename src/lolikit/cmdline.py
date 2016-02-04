@@ -71,14 +71,8 @@ def process(args, commands):
 def main():
     utils.register_signal_handler()
     rootdir = utils.get_rootdir()
-    if rootdir is None:
-        print('abort: cannot find ".loli" folder'
-              ' in current or any higher directories.\n'
-              'you may want to create a empty one by yourself.')
-        sys.exit(1)
-    else:
-        config = utils.get_config(rootdir)
-        commands = SCL.get_commands_list(config, rootdir)
+    config = utils.get_config(rootdir)
+    commands = SCL.get_commands_list(config, rootdir)
 
     parser = build_parser(config, commands)
     if len(sys.argv) == 1:

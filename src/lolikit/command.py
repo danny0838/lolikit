@@ -26,6 +26,7 @@
 
 import abc
 import re
+import sys
 
 
 class CanNotDetectEncodingError(Exception):
@@ -103,6 +104,14 @@ class Command(metaclass=abc.ABCMeta):
                          if p2 != p and p2.is_file())
                      ))]
         return self.ignore_filter(paths)
+
+    def require_rootdir(self):
+        if self.rootdir is None:
+            print(
+                'abort: This command should run within a loli directory.\n'
+                '  Which defined by a ".loli" folder in project root dir.\n'
+                '  If no exists yet, you may want to create a empty one.')
+            sys.exit(0)
 
     # def get_content_and_encoding(self, path):
     #     with open(str(path), mode='rb') as f:
