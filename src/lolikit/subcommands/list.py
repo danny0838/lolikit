@@ -49,14 +49,14 @@ class ListCommand(command.Command):
 
     def run(self, args):
         self.require_rootdir()
+
         notes = [NLS.Note(path, self.rootdir)
                  for path in self.get_all_md_paths()]
         notes.sort(
             key=lambda x: x.path.stat().st_mtime, reverse=True)
-        nls = NLS.NoteListSelector(
+        NLS.start_selector(
             notes=notes,
             show_reverse=self.config['default'].getboolean('show_reverse'),
             editor_command=self.config['default']['editor_command'],
             page_size=args.page_size,
             output_format=self.config[self.get_name()]['output_format'])
-        nls.print_and_open(page=0)

@@ -61,13 +61,12 @@ class FindCommand(command.Command):
                  in sorted(scored_notes, key=lambda x: x[0], reverse=True)]
 
         if len(notes) > 0:
-            nls = NLS.NoteListSelector(
+            NLS.start_selector(
                 notes=notes,
                 show_reverse=self.config['default'].getboolean('show_reverse'),
                 editor_command=self.config['default']['editor_command'],
                 page_size=args.page_size,
                 output_format=self.config[self.get_name()]['output_format'])
-            nls.print_and_open(page=0)
 
     def get_all_matches(self, patterns):
         """

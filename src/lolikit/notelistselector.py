@@ -27,6 +27,8 @@
 import subprocess
 import datetime as DT
 import cmd
+import sys
+import math
 
 
 class Note():
@@ -89,7 +91,7 @@ class Note():
             }
 
 
-class NoteListSelector():
+class NotePager():
     def __init__(self, notes, show_reverse,
                  editor_command, page_size, output_format):
         self.notes = notes
@@ -97,21 +99,53 @@ class NoteListSelector():
         self.editor_command = editor_command
         self.page_size = page_size
         self.output_format = output_format
+        self.page = 1
 
-    def get_notes_in_page(self, page):
-        startindex = (page - 1) * self.page_size
-        endindex = ((page - 1) + 1) * self.page_size
+    def get_page_count(self):
+        return int(len(self.notes) / self.page_size) + 1
+
+    def set_page(self, page):
+        def restrict_page(want_page):
+            max_page = self.get_page_count()
+            min_page = 1
+            return min(max(min_page, want_page), max_page)
+
+        self.page = restrict_page(page)
+
+    def set_page_size(self, page_size):
+        def restrict_page_size(want_page_size):
+            min_page_size = 1
+            return max(want_page_size, min_page_size)
+
+        page_size = restrict_page_size(page_size)
+        first_item_number = self.page_size * (self.page - 1) + 1
+        new_page = math.ceil(first_item_number / page_size)
+        self.page_size = page_size
+        self.set_page(new_page)
+
+    def get_notes(self):
+        startindex = (self.page - 1) * self.page_size
+        endindex = ((self.page - 1) + 1) * self.page_size
         return self.notes[startindex:endindex]
 
-    def print(self, page):
-        page = self.restrict_page(page)
-        notes = self.get_notes_in_page(page)
+    def get_page_content(self):
+        notes = self.get_notes()
         notes_with_index = list(enumerate(notes, start=1))
         if self.show_reverse:
             notes_with_index.reverse()
-        for index, note in notes_with_index:
-            print(('{index:>2}) ' + self.output_format).format(
-                index=index, **note.get_properties()))
+        texts = [('{index:>2}) ' + self.output_format).format(
+                 index=index, **note.get_properties())
+                 for index, note in notes_with_index]
+        texts.append('[page {}/{}]'.format(self.page, self.get_page_count()))
+        result = '\n'.join(line for line in texts)
+        return result
+
+    def get_note(self, open_number):
+        notes = self.get_notes()
+        max_number = len(notes)
+        min_number = 1
+        corrected_open_number = min(max(min_number, open_number), max_number)
+        return notes[corrected_open_number - 1]
 
     def open_editor(self, note, executable=None):
         if executable:
@@ -123,77 +157,108 @@ class NoteListSelector():
             cmd_str = self.editor_command.format(note.absolute_path)
             subprocess.call(cmd_str, shell=True)
 
-    def get_page_count(self):
-        return int(len(self.notes) / self.page_size) + 1
 
-    def restrict_page(self, want_page):
-        max_page = self.get_page_count()
-        min_page = 1
-        return min(max(min_page, want_page), max_page)
+class NoteListSelector2(cmd.Cmd):
+    prompt = 'open> '
 
-    def print_and_open(self, page):
-        def print_help():
-            print('=========================================================\n'
-                  '  How to use:\n'
-                  '    * <number>    - open one item\n'
-                  '    * <number> @ <executable>\n'
-                  '                  - open one item with special executable\n'
-                  '    * n           - next page\n'
-                  '    * p           - previous page\n'
-                  '    * f           - first page\n'
-                  '    * l           - last page\n'
-                  '    * ?, h, help  - show this help message\n'
-                  '    * <else>      - exit\n'
-                  '=========================================================')
-            # input('press enter to continue> ')
+    def __init__(self, note_pager):
+        super().__init__()
+        self.note_pager = note_pager
+        self.intro = ('Loli Note Selector (press "help" for usage)\n'
+                      '===========================================\n' +
+                      self.note_pager.get_page_content())
 
-        def get_input(page):
-            if page == 1:
-                prompt = "open> "
-            else:
-                prompt = "[page {}/{}] open> ".format(
-                    page, self.get_page_count())
-            user_input = input(prompt)
-            return user_input
+    def print_page(self):
+        print(self.note_pager.get_page_content())
 
-        def get_selected_note(page):
-            def get_open_note(number_str, notes):
-                try:
-                    open_number = int(number_str)
-                    if open_number <= 0 or open_number > len(notes):
-                        return None
-                    return notes[open_number - 1]
-                except:
-                    return None
+    def postcmd(self, stop, line):
+        if all([line.split()[0] not in ('help', ),
+                not line.startswith('?'),
+                not line.startswith('!')]):
+            self.print_page()
 
-            page = self.restrict_page(page)
-            notes = self.get_notes_in_page(page)
-            user_input = get_input(page)
+    def exit(self):
+        '''Exit program'''
+        sys.exit(0)
 
-            if user_input:
-                if user_input == 'n':
-                    return self.print_and_open(page + 1)
-                elif user_input == 'p':
-                    return self.print_and_open(page - 1)
-                elif user_input == 'f':
-                    return self.print_and_open(1)
-                elif user_input == 'l':
-                    return self.print_and_open(self.get_page_count())
-                elif user_input in ('h', 'help', '?'):
-                    print_help()
-                    return self.print_and_open(page)
-                else:
-                    result = user_input.split('@', 1)
-                    result = [item.strip() for item in result]
-                    open_note = get_open_note(result[0], notes)
-                    executable = None
-                    if len(result) == 2:
-                        executable = result[1]
-                    return open_note, executable
+    def emptyline(self):
+        self.exit()
 
-        self.print(page)
-        result = get_selected_note(page)
-        if result:
-            note, executable = result
-            if note:
-                self.open_editor(note, executable)
+    def default(self, line):
+        '''default oparation'''
+        result = [item.strip() for item in line.split('@', 1)]
+        try:
+            open_number = int(result[0])
+        except:
+            print('command not found: try "help" or "help usage"'
+                  ' for more detail.')
+            return
+        open_note = self.note_pager.get_note(open_number)
+        executable = None
+        if len(result) == 2:
+            executable = result[1]
+        self.note_pager.open_editor(open_note, executable)
+        self.exit()
+
+    def do_next(self, arg):
+        '''Go to next page(s)
+        example: next [page_count]'''
+        try:
+            number = max(int(arg), 1)
+        except:
+            number = 1
+        self.note_pager.set_page(self.note_pager.page + number)
+
+    def do_prev(self, arg):
+        '''Go to previous page(s)
+        example: previous [page_count]'''
+        try:
+            number = max(int(arg), 1)
+        except:
+            number = 1
+        self.note_pager.set_page(self.note_pager.page + number)
+
+    def do_first(self, arg):
+        '''Go to first page
+        example: first'''
+        self.note_pager.set_page(1)
+
+    def do_last(self, arg):
+        '''Go to last page
+        example: last'''
+        self.note_pager.set_page(99999999)
+
+    def do_goto(self, arg):
+        '''Go to a special page.
+        example: goto <page_number>'''
+        try:
+            number = max(int(arg), 1)
+        except:
+            return
+        self.note_pager.set_page(number)
+
+    def do_pagesize(self, arg):
+        '''Set the page size.
+        It's will change page and try to keep first item still in list.
+        example: pagesize <item_count>'''
+        try:
+            number = max(int(arg), 1)
+        except:
+            return
+        self.note_pager.set_page_size(number)
+
+    def help_usage(self):
+        print('How to open a note:\n'
+              '        * <number>  - open one item\n'
+              '        * <number> @ <executable>\n'
+              '                    - open one item with special executable\n')
+        #       'How to open a note directory:\n'
+        #       '        * diropen <number> @ <executable>'
+
+
+def start_selector(notes, show_reverse,
+                   editor_command, page_size, output_format):
+    note_pager = NotePager(notes, show_reverse,
+                           editor_command, page_size, output_format)
+    nls = NoteListSelector2(note_pager)
+    nls.cmdloop()

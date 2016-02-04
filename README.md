@@ -100,6 +100,7 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 ## Version 1.2
 
+  - Changed: re-write the note selector for scalability and change the command.
   - Enhanced: can execute when CWD not in a loli project.
   - Enhanced: note selector can assign executable as opener.
 
