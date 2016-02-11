@@ -93,10 +93,10 @@ class Note():
 
 class NotePager():
     def __init__(self, notes, show_reverse,
-                 editor_command, page_size, output_format):
+                 editor, page_size, output_format):
         self.notes = notes
         self.show_reverse = show_reverse
-        self.editor_command = editor_command
+        self.editor = editor
         self.page_size = page_size
         self.output_format = output_format
         self.page = 1
@@ -148,14 +148,12 @@ class NotePager():
         return notes[corrected_open_number - 1]
 
     def open_editor(self, note, executable=None):
-        if executable:
-            try:
-                subprocess.call([executable, note.absolute_path])
-            except FileNotFoundError:
-                print('executable: "{}" not found. cancel.'.format(executable))
-        else:
-            cmd_str = self.editor_command.format(note.absolute_path)
-            subprocess.call(cmd_str, shell=True)
+        if executable is None:
+            executable = self.editor
+        try:
+            subprocess.call([executable, note.absolute_path])
+        except FileNotFoundError:
+            print('executable: "{}" not found. cancel.'.format(executable))
 
 
 class NoteListSelector2(cmd.Cmd):
@@ -256,9 +254,8 @@ class NoteListSelector2(cmd.Cmd):
         #       '        * diropen <number> @ <executable>'
 
 
-def start_selector(notes, show_reverse,
-                   editor_command, page_size, output_format):
+def start_selector(notes, show_reverse, editor, page_size, output_format):
     note_pager = NotePager(notes, show_reverse,
-                           editor_command, page_size, output_format)
+                           editor, page_size, output_format)
     nls = NoteListSelector2(note_pager)
     nls.cmdloop()

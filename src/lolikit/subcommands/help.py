@@ -112,18 +112,16 @@ class HelpCommand(command.Command):
 
             ### [default] section ###
 
-            #### editor_command ####
+            #### editor ####
 
             Some lolikit command need to open a editor. This setting
             define how to open it.
 
             example:
-                vim "{{}}"
+                vim
 
-            The "{{}}" will be replaced with note's filepath.
-
-            - default: "{default[default][editor_command]}"
-            - current: "{current[default][editor_command]}"
+            - default: "{default[default][editor]}"
+            - current: "{current[default][editor]}"
 
             #### show_reverse ####
 

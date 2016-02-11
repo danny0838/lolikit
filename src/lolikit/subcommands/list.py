@@ -57,6 +57,6 @@ class ListCommand(command.Command):
         NLS.start_selector(
             notes=notes,
             show_reverse=self.config['default'].getboolean('show_reverse'),
-            editor_command=self.config['default']['editor_command'],
+            editor=self.config['default']['editor'],
             page_size=args.page_size,
             output_format=self.config[self.get_name()]['output_format'])
