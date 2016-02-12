@@ -211,8 +211,12 @@ class NoteListSelector2(cmd.Cmd):
 
         if len(items) == 1:
             executable = None
-        if items == 2:
+        elif len(items) == 2:
             executable = items[1]
+        else:
+            print('command not found: try "help" or "help usage"'
+                  ' for more detail.')
+            return
 
         if '/' in line:
             self.note_pager.open_file_browser(note, executable)
