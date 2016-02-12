@@ -100,10 +100,11 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 ## Version 1.2
 
-  - Changed: re-write the note selector for scalability and change the command.
-  - Changed: option `editor_command` change to `editor`.
-  - Enhanced: can execute when CWD not in a loli project.
-  - Enhanced: note selector can assign executable as opener.
+  - Refactor: re-write the note selector for scalability and change the UI command.
+  - Changed: option `editor_command` now change to `editor`.
+  - Enhanced: note selector can open a file browser in special note parent folder now.
+  - Enhanced: now `loli` can be executed when current working direcotry not in a loli project.
+  - Enhanced: note selector can assign a executable as opener in runtime.
 
 ## Version 1.1
 

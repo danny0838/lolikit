@@ -32,10 +32,19 @@ from collections import OrderedDict as OD
 def _get_default_editor():
     if sys.platform.startswith('linux'):
         return 'xdg-open'
-    elif sys.platform.startswith('win'):
-        return 'start'
     elif sys.platform.startswith('darwin'):
         return 'open'
+    elif sys.platform.startswith('win'):
+        return 'start'
+
+
+def _get_default_file_browser():
+    if sys.platform.startswith('linux'):
+        return 'xdg-open'
+    elif sys.platform.startswith('darwin'):
+        return 'open'
+    elif sys.platform.startswith('win'):
+        return 'explorer'
 
 
 def _get_default_newline_mode():
@@ -52,6 +61,7 @@ def _get_default_newline_mode():
 DEFAULT_CONFIG = OD((
     ('default', OD((
         ('editor', _get_default_editor()),
+        ('file_browser', _get_default_file_browser()),
         ('show_reverse', 'no'),
         ('page_size', 10),
         ('ignore_patterns', ''),

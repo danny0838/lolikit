@@ -29,6 +29,7 @@ import datetime as DT
 import cmd
 import sys
 import math
+import re
 
 
 class Note():
@@ -56,6 +57,10 @@ class Note():
     @property
     def absolute_path(self):
         return str(self.path.resolve())
+
+    @property
+    def absolute_parent_dirpath(self):
+        return str(self.path.parent.resolve())
 
     @property
     def root_relative_path(self):
@@ -93,10 +98,11 @@ class Note():
 
 class NotePager():
     def __init__(self, notes, show_reverse,
-                 editor, page_size, output_format):
+                 editor, file_browser, page_size, output_format):
         self.notes = notes
         self.show_reverse = show_reverse
         self.editor = editor
+        self.file_browser = file_browser
         self.page_size = page_size
         self.output_format = output_format
         self.page = 1
@@ -147,13 +153,21 @@ class NotePager():
         corrected_open_number = min(max(min_number, open_number), max_number)
         return notes[corrected_open_number - 1]
 
-    def open_editor(self, note, executable=None):
-        if executable is None:
-            executable = self.editor
+    def open_editor(self, note, editor=None):
+        if editor is None:
+            editor = self.editor
         try:
-            subprocess.call([executable, note.absolute_path])
+            subprocess.call([editor, note.absolute_path])
         except FileNotFoundError:
-            print('executable: "{}" not found. cancel.'.format(executable))
+            print('editor: "{}" not found. cancel.'.format(editor))
+
+    def open_file_browser(self, note, file_browser=None):
+        if file_browser is None:
+            file_browser = self.file_browser
+        try:
+            subprocess.call([file_browser, note.absolute_parent_dirpath])
+        except FileNotFoundError:
+            print('file_browser: "{}" not found. cancel.'.format(file_browser))
 
 
 class NoteListSelector2(cmd.Cmd):
@@ -184,19 +198,28 @@ class NoteListSelector2(cmd.Cmd):
 
     def default(self, line):
         '''default oparation'''
-        result = [item.strip() for item in line.split('@', 1)]
+        items = [item.strip() for item in re.split('[/@]', line, 1)
+                 if item != '']
+
         try:
-            open_number = int(result[0])
+            number = int(items[0])
         except:
             print('command not found: try "help" or "help usage"'
                   ' for more detail.')
             return
-        open_note = self.note_pager.get_note(open_number)
-        executable = None
-        if len(result) == 2:
-            executable = result[1]
-        self.note_pager.open_editor(open_note, executable)
-        self.exit()
+        note = self.note_pager.get_note(number)
+
+        if len(items) == 1:
+            executable = None
+        if items == 2:
+            executable = items[1]
+
+        if '/' in line:
+            self.note_pager.open_file_browser(note, executable)
+            self.exit()
+        else:
+            self.note_pager.open_editor(note, executable)
+            self.exit()
 
     def do_next(self, arg):
         '''Go to next page(s)
@@ -235,10 +258,10 @@ class NoteListSelector2(cmd.Cmd):
             return
         self.note_pager.set_page(number)
 
-    def do_pagesize(self, arg):
+    def do_size(self, arg):
         '''Set the page size.
         It's will change page and try to keep first item still in list.
-        example: pagesize <item_count>'''
+        example: size <item_count>'''
         try:
             number = max(int(arg), 1)
         except:
@@ -247,15 +270,21 @@ class NoteListSelector2(cmd.Cmd):
 
     def help_usage(self):
         print('How to open a note:\n'
-              '        * <number>  - open one item\n'
-              '        * <number> @ <executable>\n'
-              '                    - open one item with special executable\n')
-        #       'How to open a note directory:\n'
-        #       '        * diropen <number> @ <executable>'
+              '        * <number>\n'
+              '        * <number> @\n'
+              '                    - open one file with default editor\n'
+              '        * <number> @ <editor>\n'
+              '                    - open one file with special editor\n'
+              'How to open a note directory:\n'
+              '        * <number> /\n'
+              '                    - open folder with default filebrowser\n'
+              '        * <number> / <file_browser>\n'
+              '                    - open folder with special filebrowser\n')
 
 
-def start_selector(notes, show_reverse, editor, page_size, output_format):
+def start_selector(notes, show_reverse,
+                   editor, file_browser, page_size, output_format):
     note_pager = NotePager(notes, show_reverse,
-                           editor, page_size, output_format)
+                           editor, file_browser, page_size, output_format)
     nls = NoteListSelector2(note_pager)
     nls.cmdloop()

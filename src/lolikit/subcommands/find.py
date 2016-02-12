@@ -65,6 +65,7 @@ class FindCommand(command.Command):
                 notes=notes,
                 show_reverse=self.config['default'].getboolean('show_reverse'),
                 editor=self.config['default']['editor'],
+                file_browser=self.config['default']['file_browser'],
                 page_size=args.page_size,
                 output_format=self.config[self.get_name()]['output_format'])
 

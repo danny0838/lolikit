@@ -114,14 +114,25 @@ class HelpCommand(command.Command):
 
             #### editor ####
 
-            Some lolikit command need to open a editor. This setting
-            define how to open it.
+            Some lolikit command may use a editor. This setting
+            define which editor should be used (by default).
 
             example:
                 vim
 
             - default: "{default[default][editor]}"
             - current: "{current[default][editor]}"
+
+            #### file_browser ####
+
+            Some lolikit command may use a file browser. This setting
+            define which file browser should be used (by default).
+
+            example:
+                nautilus
+
+            - default: "{default[default][file_browser]}"
+            - current: "{current[default][file_browser]}"
 
             #### show_reverse ####
 
