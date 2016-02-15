@@ -46,11 +46,6 @@ class FindCommand(command.Command):
             'pattern', metavar='PATTERN', type=str, nargs='+',
             help='string or regex pattern for finding')
 
-        parser.add_argument(
-            '-s', metavar='PAGESIZE', dest='page_size', type=int,
-            default=int(self.config['default']['page_size']),
-            help='override each page\'s items count')
-
     def run(self, args):
         self.require_rootdir()
         scored_notes = [
@@ -66,7 +61,7 @@ class FindCommand(command.Command):
                 show_reverse=self.config['default'].getboolean('show_reverse'),
                 editor=self.config['default']['editor'],
                 file_browser=self.config['default']['file_browser'],
-                page_size=args.page_size,
+                page_size=self.config['default']['page_size'],
                 output_format=self.config[self.get_name()]['output_format'])
 
     def get_all_matches(self, patterns):

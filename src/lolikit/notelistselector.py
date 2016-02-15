@@ -273,17 +273,22 @@ class NoteListSelector2(cmd.Cmd):
         self.note_pager.set_page_size(number)
 
     def help_usage(self):
-        print('How to open a note:\n'
-              '        * <number>\n'
-              '        * <number> @\n'
-              '                    - open one file with default editor\n'
-              '        * <number> @ <editor>\n'
-              '                    - open one file with special editor\n'
-              'How to open a note directory:\n'
-              '        * <number> /\n'
-              '                    - open folder with default filebrowser\n'
-              '        * <number> / <file_browser>\n'
-              '                    - open folder with special filebrowser\n')
+        print('Open a note:\n'
+              '    <number>\n'
+              '    <number> @\n'
+              '        - open one file with default editor\n'
+              '    <number> @ <editor>\n'
+              '        - open one file with special editor\n'
+              'Open a note directory:\n'
+              '    <number> /\n'
+              '        - open folder with default filebrowser\n'
+              '    <number> / <file_browser>\n'
+              '        - open folder with special filebrowser\n'
+              'Example:\n'
+              '    5\n'
+              '    5@gedit\n'
+              '    5/\n'
+              '    5/nautilus\n')
 
 
 def start_selector(notes, show_reverse,

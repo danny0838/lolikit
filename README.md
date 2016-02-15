@@ -98,6 +98,10 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 # Changelog
 
+## Version 1.2.2
+
+  - Removed: `-s` options in `find` and `list` commands.
+
 ## Version 1.2.1
 
   - Fixed: error when assign a opener in note selector UI.
