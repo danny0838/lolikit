@@ -101,6 +101,7 @@ You can run `loli fix` to check inconsistent of the newline format.
 ## Version 1.2.2
 
   - Removed: `-s` options in `find` and `list` commands.
+  - Fixed: `prev` command in note selector are mulfunction.
 
 ## Version 1.2.1
 

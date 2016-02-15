@@ -241,7 +241,7 @@ class NoteListSelector2(cmd.Cmd):
             number = max(int(arg), 1)
         except:
             number = 1
-        self.note_pager.set_page(self.note_pager.page + number)
+        self.note_pager.set_page(self.note_pager.page - number)
 
     def do_first(self, arg):
         '''Go to first page
