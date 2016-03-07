@@ -110,6 +110,28 @@ class HelpCommand(command.Command):
 
             ## Variables ##
 
+            ### [user] section ###
+
+            Variable in `user` section can only work within
+            user configure file & cannot put in to project configure file.
+
+            #### default_project_dir ####
+
+            Set your default project dir. If your are not under
+            any loli project and run `loli` command, the program
+            will try to using the `default_project_dir` as your default
+            project folder.
+
+            You can let it blank to disable this feature. (default)
+
+            example:
+                ~/.notes
+
+            - default: "{default[default][default_project_dir]}"
+            - current: "{current[default][default_project_dir]}"
+
+
+
             ### [default] section ###
 
             #### editor ####

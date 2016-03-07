@@ -84,19 +84,23 @@ MIT LICENSE
 
 ## utf8 with BOM?
 
-Currently the lolikit's implement just sample ignore the BOM. But I highly recommended DO NOT contain BOM when you try to saving.
+Currently the lolikit's implement just sample ignore the BOM. But I highly recommended DO NOT contain BOM in your note files.
 
 
 
 ## What's the newline format?
 
-Lolikit wish you to use only one kind of newline format (one of `\n`, `\r`, `\r\n`). But you can decided which one you want to use. See `loli help --config`
+Lolikit believe you should use only one kind of newline format (one of `\n`, `\r`, `\r\n`) in your project. But you can decided which one you want. See `loli help --config`
 
 You can run `loli fix` to check inconsistent of the newline format.
 
 
 
 # Changelog
+
+## Version 1.3.0
+
+  - Enhanced: now user can assign a `default_project_dir` in `user` section in your USER-LEVEL lolikitrc file. This project folder will be used when user are not within any loli project folder.
 
 ## Version 1.2.2
 

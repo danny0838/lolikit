@@ -59,6 +59,9 @@ def _get_default_newline_mode():
 
 
 DEFAULT_CONFIG = OD((
+    ('user', OD((
+        ('default_project_dir', ""),
+        ))),
     ('default', OD((
         ('editor', _get_default_editor()),
         ('file_browser', _get_default_file_browser()),

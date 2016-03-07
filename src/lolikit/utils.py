@@ -29,6 +29,7 @@ import pathlib
 import sys
 import os
 import signal
+import os.path
 
 from . import defaultconfig
 
@@ -37,7 +38,7 @@ class ConfigError(Exception):
     pass
 
 
-def get_config(rootdir):
+def get_config(rootdir=None):
     def read_config(rootdir):
         config = configparser.ConfigParser()
         config.read_dict(defaultconfig.DEFAULT_CONFIG)
@@ -80,7 +81,7 @@ def register_signal_handler():
     signal.signal(signal.SIGINT, signal_handler)
 
 
-def get_rootdir():
+def get_rootdir(config):
     def checkdirs(current_dir):
         paths = [path for path in current_dir.glob('.loli')]
         if len(paths) == 1 and paths[0].is_dir():
@@ -91,8 +92,16 @@ def get_rootdir():
             else:
                 return None
 
+    def get_default_rootdir():
+        default_project_dir = pathlib.Path(
+            os.path.expanduser(config['default'].get('default_project_dir')))
+        return checkdirs(default_project_dir)
+
     current_dir = pathlib.Path(os.getcwd())
-    return checkdirs(current_dir)
+    rootdir = checkdirs(current_dir)
+    if rootdir is None:
+        rootdir = get_default_rootdir()
+    return rootdir
 
 
 def confirm(message):

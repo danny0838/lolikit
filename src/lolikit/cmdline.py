@@ -70,7 +70,8 @@ def process(args, commands):
 
 def main():
     utils.register_signal_handler()
-    rootdir = utils.get_rootdir()
+    no_rootdir_config = utils.get_config(None)
+    rootdir = utils.get_rootdir(no_rootdir_config)
     config = utils.get_config(rootdir)
     commands = SCL.get_commands_list(config, rootdir)
 
