@@ -3,4 +3,5 @@ __all__ = [
     'find',
     'list',
     'fix',
+    'show',
 ]

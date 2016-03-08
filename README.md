@@ -101,6 +101,7 @@ You can run `loli fix` to check inconsistent of the newline format.
 ## Version 1.3.0
 
   - Enhanced: now user can assign a `default_project_dir` in `user` section in your USER-LEVEL lolikitrc file. This project folder will be used when user are not within any loli project folder.
+  - Added: `show` command to show current project stats.
 
 ## Version 1.2.2
 
