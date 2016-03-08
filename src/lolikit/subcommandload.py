@@ -30,5 +30,6 @@ from . subcommands import *
 
 def get_commands_list(config, rootdir):
     sub_commands = [cmd_cls(config, rootdir)
-                    for cmd_cls in command.Command.__subclasses__()]
+                    for cmd_cls in sorted(command.Command.__subclasses__(),
+                                          key=lambda x: x.__name__)]
     return sub_commands
