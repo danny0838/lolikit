@@ -25,6 +25,7 @@
 
 
 import argparse
+import functools
 
 from .. import command
 
@@ -42,7 +43,41 @@ class ShowCommand(command.Command):
 
     def run(self, args):
         self.require_rootdir()
-        info = (
-            ' - Current Project Folder:  "{rootdir}"'
-            ).format(rootdir=self.rootdir)
+        info = '\n'.join([
+            ' - Current Project Folder:   {rootdir}',
+            ' - MD Count:                 {md_count:>7}',
+            ' - MD (Resourced) Count:     {rmd_count:>7}',
+            ' - MD Avg. Depth:            {md_avg_depth:>10.2f}',
+            ' - MD Total Size:            {md_total_size:>10.2f} KB',
+            ' - Project Total Size:       {project_total_size:>10.2f} KB',
+            ]).format(
+                rootdir=str(self.rootdir),
+                project_total_size=self.__get_project_total_size() / 1024,
+                md_count=len(self.get_all_md_paths()),
+                rmd_count=len(self.get_all_resourced_md_paths()),
+                md_total_size=self.__get_md_total_size() / 1024,
+                md_avg_depth=self.__get_md_avg_depth(),
+                )
         print(info)
+
+    def __get_md_total_size(self):
+        """return md total size (bytes)"""
+        return functools.reduce(
+            lambda value, next: value + next.stat().st_size,
+            self.get_all_md_paths(),
+            0)
+
+    def __get_project_total_size(self):
+        """return project total size (bytes)"""
+        return functools.reduce(
+            lambda value, next: value + next.stat().st_size,
+            (p for p in self.rootdir.rglob('*')),
+            0)
+
+    def __get_md_avg_depth(self):
+        path_depths = [len(p.relative_to(self.rootdir).parents)
+                       for p in self.get_all_md_paths()]
+        # import collections
+        # counter = collections.Counter(path_deeps)
+        # print(sorted(counter.items(), key=lambda x: x[0]), )
+        return sum(path_depths) / len(path_depths)

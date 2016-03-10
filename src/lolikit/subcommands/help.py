@@ -127,8 +127,8 @@ class HelpCommand(command.Command):
             example:
                 ~/.notes
 
-            - default: "{default[default][default_project_dir]}"
-            - current: "{current[default][default_project_dir]}"
+            - default: "{default[user][default_project_dir]}"
+            - current: "{current[user][default_project_dir]}"
 
 
 
