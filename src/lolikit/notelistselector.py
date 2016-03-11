@@ -137,12 +137,17 @@ class NotePager():
     def get_page_content(self):
         notes = self.get_notes()
         notes_with_index = list(enumerate(notes, start=1))
+        page_info = '[page {}/{}]'.format(self.page, self.get_page_count())
         if self.show_reverse:
             notes_with_index.reverse()
         texts = [('{index:>2}) ' + self.output_format).format(
                  index=index, **note.get_properties())
                  for index, note in notes_with_index]
-        texts.append('[page {}/{}]'.format(self.page, self.get_page_count()))
+
+        if self.show_reverse:
+            texts.insert(0, page_info)
+        else:
+            texts.append(page_info)
         result = '\n'.join(line for line in texts)
         return result
 
@@ -271,6 +276,11 @@ class NoteListSelector2(cmd.Cmd):
         except:
             return
         self.note_pager.set_page_size(number)
+
+    def do_reverse(self, arg):
+        '''Toggle reverse display mode.
+        example: reverse'''
+        self.note_pager.show_reverse = not self.note_pager.show_reverse
 
     def help_usage(self):
         print('Open a note:\n'
