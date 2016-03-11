@@ -100,8 +100,11 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 ## Version 1.3.0
 
+This version change a lot of configure variables names. Check `loli help --config` if your `lolikitrc` are not work.
+
   - Enhanced: now user can assign a `default_project_dir` in `user` section in your USER-LEVEL lolikitrc file. This project folder will be used when user are not within any loli project folder.
   - Added: `show` command to show current project stats.
+  - Tweaked: change a lot of config variables names.
 
 ## Version 1.2.2
 

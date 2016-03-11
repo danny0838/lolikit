@@ -80,7 +80,7 @@ class Command(metaclass=abc.ABCMeta):
     def ignore_filter(self, paths):
         ignore_progs = [
             re.compile(pattern.strip()) for pattern
-            in self.config['default']['ignore_patterns'].split('\n')
+            in self.config['project']['ignore_patterns'].split('\n')
             if pattern.strip()]
         return [path for path in paths
                 if not any(
@@ -108,9 +108,11 @@ class Command(metaclass=abc.ABCMeta):
     def require_rootdir(self):
         if self.rootdir is None:
             print(
-                'abort: This command should run within a loli directory.\n'
+                'abort: This command should run within a loli project '
+                'folder.\n'
                 '  Which defined by a ".loli" folder in project root dir.\n'
-                '  If no exists yet, you may want to create a empty one.')
+                '  If ".loli" no exists yet, you may want to create a empty '
+                'one.')
             sys.exit(0)
 
     # def get_content_and_encoding(self, path):

@@ -214,7 +214,7 @@ class FixCommand(command.Command):
             return None
 
     def __get_inconsistent_newline_paths(self):
-        want_newline_mode = self.config['default']['newline_mode']
+        want_newline_mode = self.config['fix']['newline_mode']
         paths = [path for path in self.get_all_md_paths()
                  if self.__get_newline_mode(path) not in (
                      want_newline_mode, None)]
@@ -242,7 +242,7 @@ class FixCommand(command.Command):
                     'to_mode "{}" not defined'.format(to_mode))
             return content.replace(from_newline, to_newline)
 
-        want_newline_mode = self.config['default']['newline_mode']
+        want_newline_mode = self.config['fix']['newline_mode']
         count = 0
         print('  changing newline...')
         for path in paths:
@@ -259,7 +259,7 @@ class FixCommand(command.Command):
         print('\n  [RESOLVED] Changed files: {}'.format(count))
 
     def __deal_inconsistent_newline_paths(self, args):
-        want_newline_mode = self.config['default']['newline_mode']
+        want_newline_mode = self.config['fix']['newline_mode']
         paths = self.__get_inconsistent_newline_paths()
         self.__deal(args=args,
                     paths=paths,

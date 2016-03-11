@@ -50,8 +50,9 @@ class ListCommand(command.Command):
         notes.sort(key=lambda x: x.path.stat().st_mtime, reverse=True)
         NLS.start_selector(
             notes=notes,
-            show_reverse=self.config['default'].getboolean('show_reverse'),
-            editor=self.config['default']['editor'],
-            file_browser=self.config['default']['file_browser'],
-            page_size=int(self.config['default']['page_size']),
+            show_reverse=self.config['note-selector'].getboolean(
+                'show_reverse'),
+            editor=self.config['note-selector']['editor'],
+            file_browser=self.config['note-selector']['file_browser'],
+            page_size=int(self.config['note-selector']['page_size']),
             output_format=self.config[self.get_name()]['output_format'])

@@ -62,18 +62,17 @@ DEFAULT_CONFIG = OD((
     ('user', OD((
         ('default_project_dir', ""),
         ))),
-    ('default', OD((
-        ('editor', _get_default_editor()),
-        ('file_browser', _get_default_file_browser()),
-        ('show_reverse', 'no'),
-        ('page_size', 10),
+    ('project', OD((
         ('ignore_patterns', ''),
         # ^ multiple patterns split by newline
         # all pathname string start with the rootdir
         # auto include: '^.loli($|' + os.sep + ')'
-        ('newline_mode', _get_default_newline_mode()),
-        # ^ 'windows', 'mac', 'posix'
-        # default == current system mode
+        ))),
+    ('note-selector', OD((
+        ('editor', _get_default_editor()),
+        ('file_browser', _get_default_file_browser()),
+        ('show_reverse', 'no'),
+        ('page_size', 10),
         ))),
     ('find', OD((
         ('output_format', '{title}  <<  {parent_dirname}'),
@@ -85,5 +84,8 @@ DEFAULT_CONFIG = OD((
     ('fix', OD((
         ('danger_pathname_chars', '\\/:"*?<>|'),
         ('danger_pathname_chars_fix_to', '='),
+        ('newline_mode', _get_default_newline_mode()),
+        # ^ 'windows', 'mac', 'posix'
+        # default == current system mode
         ))),
     ))

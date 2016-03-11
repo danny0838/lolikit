@@ -53,15 +53,15 @@ def get_config(rootdir=None):
         return config
 
     def expand_config(config):
-        config['default']['ignore_patterns'] += (
+        config['project']['ignore_patterns'] += (
             '\n^\.loli($|' + os.sep + ')')
         return config
 
     def check_config(config):
         valid_newline_mode = ('posix', 'windows', 'mac')
-        if config['default']['newline_mode'] not in valid_newline_mode:
+        if config['fix']['newline_mode'] not in valid_newline_mode:
             raise ConfigError(
-                '[CONFIGERROR] "default:newline_mode" must one of {}'
+                '[CONFIGERROR] "fix:newline_mode" must one of {}'
                 .format(valid_newline_mode))
 
     config = read_config(rootdir)
@@ -94,7 +94,7 @@ def get_rootdir(config):
 
     def get_default_rootdir():
         default_project_dir = pathlib.Path(
-            os.path.expanduser(config['default'].get('default_project_dir')))
+            os.path.expanduser(config['user'].get('default_project_dir')))
         return checkdirs(default_project_dir)
 
     current_dir = pathlib.Path(os.getcwd())

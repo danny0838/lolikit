@@ -99,12 +99,15 @@ class HelpCommand(command.Command):
 
             The lolikitrc files is a kind of "ini" format. It look like...
 
-                [default]
-                show_reverse = on       # This is comment
-                ignore_patterns = .swp$ # allow multi-line values
+                [note-selector]
+                show_reverse = on        # This is comment
+                editor       = vim
+
+                [project]
+                ignore_patterns = .swp$  # <- multi-line values
                                   ~$
                 [fix]
-                small_size = 80
+                newline_mode = posix
 
 
 
@@ -112,8 +115,8 @@ class HelpCommand(command.Command):
 
             ### [user] section ###
 
-            Variable in `user` section can only work within
-            user configure file & cannot put in to project configure file.
+            Variables in `user` section can only working within the
+            "user configure file" & cannot put in to project configure file.
 
             #### default_project_dir ####
 
@@ -132,7 +135,22 @@ class HelpCommand(command.Command):
 
 
 
-            ### [default] section ###
+            ### [project] section ###
+
+            #### ignore_patterns ####
+
+            Determine which path will be ignore by lolikit in current project.
+            It is a list of regex patterns and splitted by newline.
+
+            PS: The "^.loli" pattern will be appended automatically and cannot
+            be removed.
+
+            - default: {default[project][ignore_patterns]}
+            - current: {current[project][ignore_patterns]}
+
+
+
+            ### [note-selector] section ###
 
             #### editor ####
 
@@ -142,8 +160,8 @@ class HelpCommand(command.Command):
             example:
                 vim
 
-            - default: "{default[default][editor]}"
-            - current: "{current[default][editor]}"
+            - default: "{default[note-selector][editor]}"
+            - current: "{current[note-selector][editor]}"
 
             #### file_browser ####
 
@@ -153,47 +171,24 @@ class HelpCommand(command.Command):
             example:
                 nautilus
 
-            - default: "{default[default][file_browser]}"
-            - current: "{current[default][file_browser]}"
+            - default: "{default[note-selector][file_browser]}"
+            - current: "{current[note-selector][file_browser]}"
 
             #### show_reverse ####
 
             Some lolikit command will show a list of notes. This setting
             define the list should be reversed or not.
 
-            - default: {default[default][show_reverse]}
-            - current: {current[default][show_reverse]}
+            - default: {default[note-selector][show_reverse]}
+            - current: {current[note-selector][show_reverse]}
 
             #### page_size ####
 
             Some lolikit command will show a list of notes. This setting
             define how much notes in one page.
 
-            - default: {default[default][page_size]}
-            - current: {current[default][page_size]}
-
-            #### ignore_patterns ####
-
-            Determine Which path will be ignore by lonokit.
-            It is a list of regex patterns and splitted by lines.
-
-            The "^.loli" pattern will be appended automatically and cannot
-            be removed.
-
-            - default: {default[default][ignore_patterns]}
-            - current: {current[default][ignore_patterns]}
-
-            #### newline_mode ####
-
-            Define which newline mode should be used in note files.
-
-            available mode:
-                - posix
-                - windows
-                - mac
-
-            - default: "{default[default][newline_mode]}"
-            - current: "{current[default][newline_mode]}"
+            - default: {default[note-selector][page_size]}
+            - current: {current[note-selector][page_size]}
 
 
 
@@ -235,6 +230,18 @@ class HelpCommand(command.Command):
 
             - default: "{default[fix][danger_pathname_chars_fix_to]}"
             - current: "{current[fix][danger_pathname_chars_fix_to]}"
+
+            #### newline_mode ####
+
+            Define which newline mode should be used in note files.
+
+            available mode:
+                - posix
+                - windows
+                - mac
+
+            - default: "{default[fix][newline_mode]}"
+            - current: "{current[fix][newline_mode]}"
             """).format(
             default=defaultconfig.DEFAULT_CONFIG, current=self.config)
         print(message)
