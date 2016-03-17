@@ -104,6 +104,7 @@ This version change a lot of configure variables names. Check `loli help --confi
 
   - Enhanced: now user can assign a `default_project_dir` in `user` section in your USER-LEVEL lolikitrc file. This project folder will be used when user are not within any loli project folder.
   - Enhanced: note-selector now be added a `reverse` command.
+  - Enhanced: note-selector can display a special icon for resourced md.
   - Added: `show` command to show current project stats.
   - Tweaked: change a lot of config variables names.
 

@@ -30,6 +30,7 @@ import sys
 import os
 import signal
 import os.path
+import functools
 
 from . import defaultconfig
 
@@ -110,3 +111,23 @@ def confirm(message):
         return True
     else:
         return False
+
+
+@functools.lru_cache(maxsize=None)
+def is_rmd(path):
+    """test the path is a resourced md path or not"""
+    if all((
+        path.is_file(),
+        path.match('*.md'),
+        all(False for p2 in path.parent.rglob('*.md') if p2 != path),
+        any(True for p2 in path.parent.glob('*')
+            if p2 != path and p2.is_file())
+            )):
+        return True
+    else:
+        return False
+
+
+@functools.lru_cache(maxsize=None)
+def get_resource_paths(rmd_path):
+    """get a list of resource file paths of a resourced md"""

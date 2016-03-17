@@ -31,6 +31,8 @@ import sys
 import math
 import re
 
+from . import utils
+
 
 class Note():
     """A note info warper"""
@@ -82,6 +84,10 @@ class Note():
     def atime(self):
         return DT.datetime.fromtimestamp(self.path.stat().st_atime)
 
+    @property
+    def resourced_icon(self):
+        return '[＋] ' if utils.is_rmd(self.path) else ''
+
     def get_properties(self):
         return {
             'title': self.title,
@@ -93,6 +99,7 @@ class Note():
             'top_dirname': self.top_dirname,
             'mtime': self.mtime,
             'atime': self.atime,
+            'resourced_icon': self.resourced_icon,
             }
 
 

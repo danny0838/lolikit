@@ -28,6 +28,8 @@ import abc
 import re
 import sys
 
+from . import utils
+
 
 class CanNotDetectEncodingError(Exception):
     pass
@@ -77,7 +79,7 @@ class Command(metaclass=abc.ABCMeta):
         '''
         pass
 
-    def ignore_filter(self, paths):
+    def filted_ignore(self, paths):
         ignore_progs = [
             re.compile(pattern.strip()) for pattern
             in self.config['project']['ignore_patterns'].split('\n')
@@ -89,21 +91,15 @@ class Command(metaclass=abc.ABCMeta):
 
     def get_all_dir_paths(self):
         paths = self.rootdir.rglob('**')
-        return self.ignore_filter(paths)
+        return self.filted_ignore(paths)
 
     def get_all_md_paths(self):
         paths = [p for p in self.rootdir.rglob('*.md') if p.is_file()]
-        return self.ignore_filter(paths)
+        return self.filted_ignore(paths)
 
     def get_all_resourced_md_paths(self):
-        paths = [p for p in self.rootdir.rglob('*.md')
-                 if all((
-                     p.is_file(),
-                     all(False for p2 in p.parent.rglob('*.md') if p2 != p),
-                     any(True for p2 in p.parent.glob('*')
-                         if p2 != p and p2.is_file())
-                     ))]
-        return self.ignore_filter(paths)
+        paths = [p for p in self.rootdir.rglob('*.md') if utils.is_rmd(p)]
+        return self.filted_ignore(paths)
 
     def require_rootdir(self):
         if self.rootdir is None:
@@ -114,14 +110,3 @@ class Command(metaclass=abc.ABCMeta):
                 '  If ".loli" no exists yet, you may want to create a empty '
                 'one.')
             sys.exit(0)
-
-    # def get_content_and_encoding(self, path):
-    #     with open(str(path), mode='rb') as f:
-    #         binary = f.read()
-    #     encoding = chardet.detect(binary)['encoding']
-    #     if encoding is None:
-    #         raise CanNotDetectEncodingError(
-    #             'Encoding Not found: "{}"'.format(str(path)))
-    #     else:
-    #         content = binary.decode(encoding)
-    #         return content, encoding
