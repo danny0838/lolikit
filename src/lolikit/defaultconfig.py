@@ -75,11 +75,11 @@ DEFAULT_CONFIG = OD((
         ('page_size', 10),
         ))),
     ('find', OD((
-        ('output_format', '{resourced_icon}{title}  <<  {parent_dirname}'),
+        ('output_format', '{prepend_resourced_icon}{title}  <<  {category}'),
         ))),
     ('list', OD((
         ('output_format',
-            '[{mtime:%%m/%%d %%H:%%M}] {resourced_icon}{title}'),
+            '[{mtime:%%m/%%d %%H:%%M}] {prepend_resourced_icon}{title}'),
         ))),
     ('fix', OD((
         ('danger_pathname_chars', '\\/:"*?<>|'),

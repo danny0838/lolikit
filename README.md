@@ -24,6 +24,7 @@ Currently the lolikit include the following sub-command...
 
 * find - find some notes which contain some special pattern
 * list - lists some notes that have recently be changed
+* show - show current project status.
 * fix  - point out & help to fix the loli project defect. such like...
     * file encoding
     * check the newline format
@@ -33,9 +34,9 @@ Currently the lolikit include the following sub-command...
 
 
 
-## What's the lolikit wan't to do?
+## What's the lolikit **wan't** to do?
 
-Everything which other tool doing better, and / or not really often need it. Such like...
+Everything which other general tools can suffice better, and / or not really often need. Such like...
 
 * file browsing
 * edit
@@ -102,9 +103,10 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 This version change a lot of configure variables names. Check `loli help --config` if your `lolikitrc` are not work.
 
-  - Enhanced: now user can assign a `default_project_dir` in `user` section in your USER-LEVEL lolikitrc file. This project folder will be used when user are not within any loli project folder.
-  - Enhanced: note-selector now be added a `reverse` command.
+  - Enhanced: now user can assign a `default_project_dir` in `user` section in your **USER-LEVEL lolikitrc** file. This project will auto be used when current working directory are not within any loli project folder.
   - Enhanced: note-selector can display a special icon for resourced md.
+  - Enhanced: note-selector now be added a `reverse` and `show` commands.
+  - Enhanced: note-selector can access the resources of a resourced md directly by `<number>.` command format.
   - Added: `show` command to show current project stats.
   - Tweaked: change a lot of config variables names.
 

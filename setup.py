@@ -49,7 +49,7 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Environment :: Console"],
-    install_requires=[],
+    install_requires=['termcolor'],
     setup_requires=[],
     package_dir={'': 'src'},
     packages=['lolikit', 'lolikit.subcommands'],

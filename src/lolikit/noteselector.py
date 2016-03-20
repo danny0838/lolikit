@@ -27,6 +27,8 @@ import datetime as DT
 import subprocess
 import re
 
+import termcolor as TC
+
 from . import itemselector as IS
 from . import utils
 
@@ -82,8 +84,19 @@ class NoteInfo():
         return DT.datetime.fromtimestamp(self.path.stat().st_atime)
 
     @property
-    def resourced_icon(self):
-        return '[＋] ' if utils.is_rmd(self.path) else ''
+    def prepend_resourced_icon(self):
+        return '+ ' if utils.is_rmd(self.path) else '  '
+
+    @property
+    def append_resourced_icon(self):
+        return ' +' if utils.is_rmd(self.path) else '  '
+
+    @property
+    def category(self):
+        if utils.is_rmd(self.path):
+            return self.grandparent_dirname
+        else:
+            return self.parent_dirname
 
     def get_properties(self):
         return {
@@ -96,7 +109,11 @@ class NoteInfo():
             'top_dirname': self.top_dirname,
             'mtime': self.mtime,
             'atime': self.atime,
-            'resourced_icon': self.resourced_icon,
+            'prepend_resourced_icon': TC.colored(
+                self.prepend_resourced_icon, 'green', attrs=['bold']),
+            'append_resourced_icon': TC.colored(
+                self.append_resourced_icon, 'green', attrs=['bold']),
+            'category': self.category,
             }
 
 
@@ -138,7 +155,7 @@ def start_note_selector(note_items, config):
     usage = (
         '\n'
         'How to use\n'
-        '=================================================\n'
+        '==================================================\n'
         '## Open a note ##\n'
         '    <number>\n'
         '    <number> @\n'
@@ -162,8 +179,8 @@ def start_note_selector(note_items, config):
         '    5/\n'
         '    5/nautilus\n')
     prompt = 'note> '
-    intro = ('Select a Item (press "help" for usage)\n'
-             '===========================================\n')
+    intro = ('Select a Note (press "help" for usage)\n'
+             '=============================================\n')
 
     def note_kwargs_gen_func(line):
         kwargs = {}
@@ -194,7 +211,7 @@ def start_note_selector(note_items, config):
 def start_attachment_selector(noteinfo, config):
     usage = (
         'How to use\n'
-        '=================================================\n'
+        '==================================================\n'
         '## Open a attach ##\n'
         '    <number>\n'
         '    <number> @\n'
@@ -206,8 +223,8 @@ def start_attachment_selector(noteinfo, config):
         '    5\n'
         '    5@firefox\n')
     prompt = 'attachment> '
-    intro = ('Select a Item (press "help" for usage)\n'
-             '===========================================\n')
+    intro = ('Select a Attachment (press "help" for usage)\n'
+             '=============================================\n')
 
     def note_kwargs_gen_func(line):
         kwargs = {}
