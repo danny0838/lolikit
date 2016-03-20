@@ -129,17 +129,19 @@ def note_item_factory(path, rootdir, text_format,
         def call(task, opener):
             if task == 'open':
                 opener = opener if opener else default_editor
+                path = noteinfo.absolute_path
                 e_msg = '[cancel]: editor "{}" not found.'
             elif task == 'file_browsing':
                 opener = opener if opener else default_file_browser
+                path = noteinfo.absolute_parent_dirpath
                 e_msg = '[cancel] file_browser "{}" not found.'
 
             if ' ' in opener:
                 command = shlex.split(opener)
-                command = [part.format(path=noteinfo.absolute_path)
+                command = [part.format(path=path)
                            for part in command]
             else:
-                command = [opener, noteinfo.absolute_path]
+                command = [opener, path]
 
             e_msg = e_msg.format(command[0])
 
