@@ -99,9 +99,9 @@ class HelpCommand(command.Command):
 
             The lolikitrc files is a kind of "ini" format. It look like...
 
-                [note-selector]
-                show_reverse = on        # This is comment
-                editor       = vim
+                [selector]
+                reverse = on        # This is comment
+                editor  = vim
 
                 [project]
                 ignore_patterns = .swp$  # <- multi-line values
@@ -115,7 +115,7 @@ class HelpCommand(command.Command):
 
             ### [user] section ###
 
-            Variables in `user` section can only working within the
+            Variables in `user` section can only meaningful within the
             "user configure file" & cannot put in to project configure file.
 
             #### default_project_dir ####
@@ -137,6 +137,9 @@ class HelpCommand(command.Command):
 
             ### [project] section ###
 
+            Variables in `project` section can only meaningful within the
+            "project configure file".
+
             #### ignore_patterns ####
 
             Determine which path will be ignore by lolikit in current project.
@@ -150,7 +153,9 @@ class HelpCommand(command.Command):
 
 
 
-            ### [note-selector] section ###
+            ### [selector] section ###
+
+            Control default selector behavior.
 
             #### editor ####
 

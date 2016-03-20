@@ -68,10 +68,10 @@ DEFAULT_CONFIG = OD((
         # all pathname string start with the rootdir
         # auto include: '^.loli($|' + os.sep + ')'
         ))),
-    ('note-selector', OD((
+    ('selector', OD((
         ('editor', _get_default_editor()),
         ('file_browser', _get_default_file_browser()),
-        ('show_reverse', 'no'),
+        ('reverse', 'no'),
         ('page_size', 10),
         ))),
     ('find', OD((
@@ -85,7 +85,7 @@ DEFAULT_CONFIG = OD((
         ('danger_pathname_chars', '\\/:"*?<>|'),
         ('danger_pathname_chars_fix_to', '='),
         ('newline_mode', _get_default_newline_mode()),
-        # ^ 'windows', 'mac', 'posix'
+        # ^ one of 'windows', 'mac', 'posix'
         # default == current system mode
         ))),
     ))

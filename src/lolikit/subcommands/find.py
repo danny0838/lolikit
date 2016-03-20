@@ -28,7 +28,7 @@ import argparse
 import re
 
 from .. import command
-from .. import notelistselector as NLS
+from .. import noteselector as NS
 
 
 class FindCommand(command.Command):
@@ -47,23 +47,40 @@ class FindCommand(command.Command):
             help='string or regex pattern for finding')
 
     def run(self, args):
-        self.require_rootdir()
-        scored_notes = [
-            (self.calculate_score(*data),
-             NLS.Note(data[0], self.rootdir))
-            for data in self.get_all_matches(args.pattern)]
-        notes = [note for score, note
-                 in sorted(scored_notes, key=lambda x: x[0], reverse=True)]
+        def start_find_selector():
+            note_items = [NS.note_item_factory(
+                path=data[0],
+                rootdir=self.rootdir,
+                text_format=self.config[self.get_name()]['output_format'],
+                default_editor=self.config['selector']['editor'],
+                default_file_browser=self.config['selector']['file_browser'],
+                config=self.config,
+                )
+                for data in sorted(
+                    self.get_all_matches(args.pattern),
+                    key=lambda data: self.calculate_score(*data),
+                    reverse=True)]
+            if len(note_items) > 0:
+                NS.start_note_selector(note_items, self.config)
 
-        if len(notes) > 0:
-            NLS.start_selector(
-                notes=notes,
-                show_reverse=self.config['note-selector'].getboolean(
-                    'show_reverse'),
-                editor=self.config['note-selector']['editor'],
-                file_browser=self.config['note-selector']['file_browser'],
-                page_size=int(self.config['note-selector']['page_size']),
-                output_format=self.config[self.get_name()]['output_format'])
+        self.require_rootdir()
+        start_find_selector()
+        # scored_notes = [
+        #     (self.calculate_score(*data),
+        #      NLS.Note(data[0], self.rootdir))
+        #     for data in self.get_all_matches(args.pattern)]
+        # notes = [note for score, note
+        #          in sorted(scored_notes, key=lambda x: x[0], reverse=True)]
+
+        # if len(notes) > 0:
+        #     NLS.start_selector(
+        #         notes=notes,
+        #         show_reverse=self.config['note-selector'].getboolean(
+        #             'show_reverse'),
+        #         editor=self.config['note-selector']['editor'],
+        #         file_browser=self.config['note-selector']['file_browser'],
+        #         page_size=int(self.config['note-selector']['page_size']),
+        #         output_format=self.config[self.get_name()]['output_format'])
 
     def get_all_matches(self, patterns):
         """

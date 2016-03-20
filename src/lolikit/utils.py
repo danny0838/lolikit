@@ -113,6 +113,15 @@ def confirm(message):
         return False
 
 
+def get_default_opener():
+    if sys.platform.startswith('linux'):
+        return 'xdg-open'
+    elif sys.platform.startswith('darwin'):
+        return 'open'
+    elif sys.platform.startswith('win'):
+        return 'start'
+
+
 @functools.lru_cache(maxsize=None)
 def is_rmd(path):
     """test the path is a resourced md path or not"""
@@ -120,8 +129,7 @@ def is_rmd(path):
         path.is_file(),
         path.match('*.md'),
         all(False for p2 in path.parent.rglob('*.md') if p2 != path),
-        any(True for p2 in path.parent.glob('*')
-            if p2 != path and p2.is_file())
+        any(True for p2 in get_resource_paths(path)),
             )):
         return True
     else:
@@ -131,3 +139,5 @@ def is_rmd(path):
 @functools.lru_cache(maxsize=None)
 def get_resource_paths(rmd_path):
     """get a list of resource file paths of a resourced md"""
+    return [path for path in rmd_path.parent.glob('*')
+            if path != rmd_path and path.is_file()]

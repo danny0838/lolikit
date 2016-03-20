@@ -27,7 +27,7 @@
 import argparse
 
 from .. import command
-from .. import notelistselector as NLS
+from .. import noteselector as NS
 
 
 class ListCommand(command.Command):
@@ -43,16 +43,19 @@ class ListCommand(command.Command):
                         'result may not consistent after file copied.')
 
     def run(self, args):
-        self.require_rootdir()
+        def start_list_selector():
+            note_items = [NS.note_item_factory(
+                path,
+                rootdir=self.rootdir,
+                text_format=self.config[self.get_name()]['output_format'],
+                default_editor=self.config['selector']['editor'],
+                default_file_browser=self.config['selector']['file_browser'],
+                config=self.config,
+                )
+                for path in sorted(self.get_all_md_paths(),
+                                   key=lambda x: x.stat().st_mtime,
+                                   reverse=True)]
+            NS.start_note_selector(note_items, self.config)
 
-        notes = [NLS.Note(path, self.rootdir)
-                 for path in self.get_all_md_paths()]
-        notes.sort(key=lambda x: x.path.stat().st_mtime, reverse=True)
-        NLS.start_selector(
-            notes=notes,
-            show_reverse=self.config['note-selector'].getboolean(
-                'show_reverse'),
-            editor=self.config['note-selector']['editor'],
-            file_browser=self.config['note-selector']['file_browser'],
-            page_size=int(self.config['note-selector']['page_size']),
-            output_format=self.config[self.get_name()]['output_format'])
+        self.require_rootdir()
+        start_list_selector()
