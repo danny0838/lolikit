@@ -164,6 +164,7 @@ class HelpCommand(command.Command):
 
             example:
                 vim
+                gedit "{path}"
 
             - default: "{default[note-selector][editor]}"
             - current: "{current[note-selector][editor]}"
@@ -175,6 +176,7 @@ class HelpCommand(command.Command):
 
             example:
                 nautilus
+                ranger "{path}"
 
             - default: "{default[note-selector][file_browser]}"
             - current: "{current[note-selector][file_browser]}"

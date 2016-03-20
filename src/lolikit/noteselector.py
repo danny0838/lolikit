@@ -26,6 +26,7 @@
 import datetime as DT
 import subprocess
 import re
+import shlex
 
 import termcolor as TC
 
@@ -125,20 +126,32 @@ def note_item_factory(path, rootdir, text_format,
         return text_format.format(**noteinfo.get_properties())
 
     def run_func(task, opener):
-        if task == 'open':
-            opener = opener if opener else default_editor
+        def call(task, opener):
+            if task == 'open':
+                opener = opener if opener else default_editor
+                e_msg = '[cancel]: editor "{}" not found.'
+            elif task == 'file_browsing':
+                opener = opener if opener else default_file_browser
+                e_msg = '[cancel] file_browser "{}" not found.'
+
+            if ' ' in opener:
+                command = shlex.split(opener)
+                command = [part.format(path=noteinfo.absolute_path)
+                           for part in command]
+            else:
+                command = [opener, noteinfo.absolute_path]
+
+            e_msg = e_msg.format(command[0])
+
             try:
-                subprocess.call([opener, noteinfo.absolute_path])
+                subprocess.call(command)
+                return True
             except FileNotFoundError:
-                print('[cancel]: editor "{}" not found.'.format(opener))
+                print(e_msg)
                 return False
-        elif task == 'file_browsing':
-            opener = opener if opener else default_file_browser
-            try:
-                subprocess.call([opener, noteinfo.absolute_parent_dirpath])
-            except FileNotFoundError:
-                print('[cancel] file_browser "{}" not found.'.format(opener))
-                return False
+
+        if task in ('open', 'file_browsing'):
+            return call(task, opener)
         elif task == 'attachment_browsing':
             if utils.is_rmd(noteinfo.path):
                 start_attachment_selector(noteinfo, config)
@@ -146,7 +159,6 @@ def note_item_factory(path, rootdir, text_format,
                 print('[cancel]: "{}" not a resourced note.'.format(
                     noteinfo.title))
             return False
-        return True
 
     return IS.Item(text=text_func, run_func=run_func)
 
