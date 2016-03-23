@@ -4,4 +4,5 @@ __all__ = [
     'list',
     'fix',
     'show',
+    'dig',
 ]

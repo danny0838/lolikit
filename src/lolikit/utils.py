@@ -31,6 +31,7 @@ import os
 import signal
 import os.path
 import functools
+import shlex
 
 from . import defaultconfig
 
@@ -141,3 +142,14 @@ def get_resource_paths(rmd_path):
     """get a list of resource file paths of a resourced md"""
     return [path for path in rmd_path.parent.glob('*')
             if path != rmd_path and path.is_file()]
+
+
+def get_opener_command(opener, path):
+    path = str(path)
+    if ' ' in opener:
+        command = shlex.split(opener)
+        command = [part.format(path=path)
+                   for part in command]
+    else:
+        command = [opener, path]
+    return command

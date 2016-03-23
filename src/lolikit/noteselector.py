@@ -26,7 +26,6 @@
 import datetime as DT
 import subprocess
 import re
-import shlex
 
 import termcolor as TC
 
@@ -150,13 +149,7 @@ def note_item_factory(path, rootdir, text_format,
                 path = data.absolute_parent_dirpath
                 e_msg = '[cancel] file_browser "{}" not found.'
 
-            if ' ' in opener:
-                command = shlex.split(opener)
-                command = [part.format(path=path)
-                           for part in command]
-            else:
-                command = [opener, path]
-
+            command = utils.get_opener_command(opener, path)
             e_msg = e_msg.format(command[0])
 
             try:
@@ -249,13 +242,7 @@ def start_attachment_selector(noteinfo, config):
                     opener = utils.get_default_opener()
                 elif match.group(2):
                     opener = match.group(2)
-                if ' ' in opener:
-                    command = shlex.split(opener)
-                    command = [part.format(path=res_path)
-                               for part in command]
-                else:
-                    command = [opener, str(res_path)]
-                return command
+                return utils.get_opener_command(opener, res_path)
 
             command = decode_line(line)
             try:
