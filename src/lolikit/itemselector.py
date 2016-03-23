@@ -29,24 +29,23 @@ How to Use:
 
 import itemselector
 
-def run_func_factory(x):
-    def run_func(quiet):  # Closure
-        if quiet:
-            print(x**2)
-        else:
-            print("{}**2 = {}".format(x, x**2))
-        return True  # stop after run
-    return run_func
+def task(data, extra_line):
+    quiet = True if 'q' in extra_line else False
+    if quiet:
+        print(data**2)
+    else:
+        print("{}**2 = {}".format(data, data**2))
+    return True  # stop after run
 
 items = [itemselector.Item(
             text="{}**2 = ?".format(i),
-            run_func=run_func_factory(i)
+            task=task,
+            data=i,
             )
          for i in range(1, 100)]
 
 IS = itemselector.ItemSelector(
     items = items,
-    kwargs_gen_func=lambda after: {'quiet': True if 'q' in after else False},
     )
 IS.cmdloop()
 """
@@ -58,28 +57,32 @@ import re
 
 
 class Item():
-    def __init__(self, text, run_func):
+    def __init__(self, text, task, data=None):
         """
-        run_func = do anything when run()
-                   return True can cause ItemSelector.cmdloop() stop.
-        text  = function without args and return item text
+        text  = a function accept only one argument (data) and return a str
                 or
                 a str object
+        task  = a function accept two arguments = func(data, extra_line)
+                  - data = see below
+                  - extra_line = digit started command without leading digits.
+                it will be called when item be selected.
+                return True can cause ItemSelector.cmdloop() stop.
+        data  = a optional data package which be used for other function.
         """
-        self.run_func = run_func
         self.text = text
-
-    def run(self, **kwargs):
-        return self.run_func(**kwargs)
+        self.task = task
+        self.data = data
 
     def get_text(self):
-        return self.text if type(self.text) is str else self.text()
+        return self.text if type(self.text) is str else self.text(self.data)
+
+    def run(self, extra_line):
+        return self.task(self.data, extra_line)
 
 
 class ItemSelector(cmd.Cmd):
     def __init__(self,
                  items,
-                 kwargs_gen_func=lambda follow_str: {'follow_str': follow_str},
                  usage='Enter a cmd starts with digit then item will be ran.',
                  prompt='> ',
                  intro=('Item Selector (press "help" for usage)\n'
@@ -88,15 +91,10 @@ class ItemSelector(cmd.Cmd):
                  reverse=False):
         """
         items = A list of Item object
-        kwargs_gen_func = A function process the "after" string and
-                          return a dict form kwargs for Item.run() function.
-                          if not return a dict, mean the "after" are invalid.
-        config = A dict of configuration
         """
         super().__init__()
 
         self.items = items
-        self.kwargs_gen_func = kwargs_gen_func
 
         self.page = 1
         self.page_size = page_size
@@ -153,8 +151,8 @@ class ItemSelector(cmd.Cmd):
         except:
             return None, None
 
-    def run_item(self, number, **kwargs):
-        return self.get_item_in_page(number).run(**kwargs)
+    def run_item(self, number, extra_line):
+        return self.get_item_in_page(number).run(extra_line)
 
     def get_page_content(self):
         items = self.get_items_in_page()
@@ -255,11 +253,10 @@ class ItemSelector(cmd.Cmd):
     # subclass usually should override following method
 
     def default(self, line):
-        number, after = self.get_number_and_after(line)
+        number, line_extra = self.get_number_and_after(line)
         if number is not None:
-            kwargs = self.kwargs_gen_func(after)
             try:
-                return self.run_item(int(number), **kwargs)
+                return self.run_item(int(number), line_extra)
             except IndexError:
                 print('[cancel]: index "{}" out of range,'
                       ' please try again.'.format(number))

@@ -120,20 +120,34 @@ class NoteInfo():
 
 def note_item_factory(path, rootdir, text_format,
                       default_editor, default_file_browser, config):
-    noteinfo = NoteInfo(path, rootdir)
+    def text_func(data):
+        return text_format.format(**data.get_properties())
 
-    def text_func():
-        return text_format.format(**noteinfo.get_properties())
+    def task(data, line):
+        def line_decode(line):
+            kwargs = {}
+            match = re.search(r'^([@/.])(.*)', line.strip())
+            if match is None:
+                kwargs['task_mode'] = 'open'
+                kwargs['opener'] = None
+            else:
+                kwargs['opener'] = match.group(2)
+                if match.group(1) == '@':
+                    kwargs['task_mode'] = 'open'
+                elif match.group(1) == '/':
+                    kwargs['task_mode'] = 'file_browsing'
+                elif match.group(1) == '.':
+                    kwargs['task_mode'] = 'attachment_browsing'
+            return kwargs['task_mode'], kwargs['opener']
 
-    def run_func(task, opener):
-        def call(task, opener):
-            if task == 'open':
+        def call_opener(task_mode, opener):
+            if task_mode == 'open':
                 opener = opener if opener else default_editor
-                path = noteinfo.absolute_path
+                path = data.absolute_path
                 e_msg = '[cancel]: editor "{}" not found.'
-            elif task == 'file_browsing':
+            elif task_mode == 'file_browsing':
                 opener = opener if opener else default_file_browser
-                path = noteinfo.absolute_parent_dirpath
+                path = data.absolute_parent_dirpath
                 e_msg = '[cancel] file_browser "{}" not found.'
 
             if ' ' in opener:
@@ -152,17 +166,20 @@ def note_item_factory(path, rootdir, text_format,
                 print(e_msg)
                 return False
 
-        if task in ('open', 'file_browsing'):
-            return call(task, opener)
-        elif task == 'attachment_browsing':
-            if utils.is_rmd(noteinfo.path):
-                start_attachment_selector(noteinfo, config)
+        task_mode, opener = line_decode(line)
+
+        if task_mode in ('open', 'file_browsing'):
+            return call_opener(task_mode, opener)
+        elif task_mode == 'attachment_browsing':
+            if utils.is_rmd(data.path):
+                start_attachment_selector(data, config)
             else:
                 print('[cancel]: "{}" not a resourced note.'.format(
-                    noteinfo.title))
+                    data.title))
             return False
 
-    return IS.Item(text=text_func, run_func=run_func)
+    noteinfo = NoteInfo(path, rootdir)
+    return IS.Item(text=text_func, task=task, data=noteinfo)
 
 
 def start_note_selector(note_items, config):
@@ -196,25 +213,8 @@ def start_note_selector(note_items, config):
     intro = ('Select a Note (press "help" for usage)\n'
              '=============================================\n')
 
-    def note_kwargs_gen_func(line):
-        kwargs = {}
-        match = re.search(r'^([@/.])(.*)', line.strip())
-        if match is None:
-            kwargs['task'] = 'open'
-            kwargs['opener'] = None
-        else:
-            kwargs['opener'] = match.group(2)
-            if match.group(1) == '@':
-                kwargs['task'] = 'open'
-            elif match.group(1) == '/':
-                kwargs['task'] = 'file_browsing'
-            elif match.group(1) == '.':
-                kwargs['task'] = 'attachment_browsing'
-        return kwargs
-
     return IS.start_selector(
         note_items,
-        kwargs_gen_func=note_kwargs_gen_func,
         usage=usage,
         prompt=prompt,
         intro=intro,
@@ -224,6 +224,7 @@ def start_note_selector(note_items, config):
 
 def start_attachment_selector(noteinfo, config):
     usage = (
+        '\n'
         'How to use\n'
         '==================================================\n'
         '## Open a attach ##\n'
@@ -240,31 +241,30 @@ def start_attachment_selector(noteinfo, config):
     intro = ('Select a Attachment (press "help" for usage)\n'
              '=============================================\n')
 
-    def note_kwargs_gen_func(line):
-        kwargs = {}
-        match = re.search(r'^([@])(.*)', line.strip())
-        if match is None:
-            kwargs['opener'] = utils.get_default_opener()
-        elif match.group(2):
-            kwargs['opener'] = match.group(2)
-        return kwargs
-
     def attachment_item_factory(res_path):
-        def run_func(opener):
+        def task(data, line):
+            def decode_line(line):
+                match = re.search(r'^([@])(.*)', line.strip())
+                if match is None:
+                    opener = utils.get_default_opener()
+                elif match.group(2):
+                    opener = match.group(2)
+                return opener
+
+            opener = decode_line(line)
             try:
                 subprocess.call([opener, str(res_path)])
             except FileNotFoundError:
                 print('opener: "{}" not found. cancel.'.format(opener))
 
         return IS.Item(text=res_path.name,
-                       run_func=run_func)
+                       task=task)
 
     items = [attachment_item_factory(res_path) for res_path
              in sorted(utils.get_resource_paths(noteinfo.path))]
 
     return IS.start_selector(
         items,
-        kwargs_gen_func=note_kwargs_gen_func,
         usage=usage,
         prompt=prompt,
         intro=intro,
