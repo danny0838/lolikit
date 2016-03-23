@@ -249,13 +249,19 @@ def start_attachment_selector(noteinfo, config):
                     opener = utils.get_default_opener()
                 elif match.group(2):
                     opener = match.group(2)
-                return opener
+                if ' ' in opener:
+                    command = shlex.split(opener)
+                    command = [part.format(path=res_path)
+                               for part in command]
+                else:
+                    command = [opener, str(res_path)]
+                return command
 
-            opener = decode_line(line)
+            command = decode_line(line)
             try:
-                subprocess.call([opener, str(res_path)])
+                subprocess.call(command)
             except FileNotFoundError:
-                print('opener: "{}" not found. cancel.'.format(opener))
+                print('opener: "{}" not found. cancel.'.format(command[0]))
 
         return IS.Item(text=res_path.name,
                        task=task)
