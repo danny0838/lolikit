@@ -104,7 +104,7 @@ class HelpCommand(command.Command):
                 editor  = vim
 
                 [project]
-                ignore_patterns = .swp$  # <- multi-line values
+                ignore_patterns = .swp$    # <- This is a multi-line values
                                   ~$
                 [fix]
                 newline_mode = posix

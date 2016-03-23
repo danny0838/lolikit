@@ -44,12 +44,12 @@ class ShowCommand(command.Command):
     def run(self, args):
         self.require_rootdir()
         info = '\n'.join([
-            ' - Current Project Folder:   {rootdir}',
-            ' - MD Count:                 {md_count:>7}',
-            ' - MD (Resourced) Count:     {rmd_count:>7}',
-            ' - MD Avg. Depth:            {md_avg_depth:>10.2f}',
-            ' - MD Total Size:            {md_total_size:>10.2f} KB',
-            ' - Project Total Size:       {project_total_size:>10.2f} KB',
+            ' - Current Project Folder  = {rootdir}',
+            ' - MD Count                = {md_count:>11,}',
+            ' - MD (Resourced) Count    = {rmd_count:>11,}',
+            ' - MD Avg. Depth           = {md_avg_depth:>14,.2f}',
+            ' - MD Total Size           = {md_total_size:>14,.2f} KB',
+            ' - Project Total Size      = {project_total_size:>14,.2f} KB',
             ]).format(
                 rootdir=str(self.rootdir),
                 project_total_size=self.__get_project_total_size() / 1024,
