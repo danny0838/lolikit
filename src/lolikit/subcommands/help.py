@@ -164,10 +164,10 @@ class HelpCommand(command.Command):
 
             example:
                 vim
-                gedit "{path}"
+                gedit "{{path}}"
 
-            - default: "{default[note-selector][editor]}"
-            - current: "{current[note-selector][editor]}"
+            - default: "{default[selector][editor]}"
+            - current: "{current[selector][editor]}"
 
             #### file_browser ####
 
@@ -176,26 +176,26 @@ class HelpCommand(command.Command):
 
             example:
                 nautilus
-                ranger "{path}"
+                ranger "{{path}}"
 
-            - default: "{default[note-selector][file_browser]}"
-            - current: "{current[note-selector][file_browser]}"
+            - default: "{default[selector][file_browser]}"
+            - current: "{current[selector][file_browser]}"
 
-            #### show_reverse ####
+            #### reverse ####
 
             Some lolikit command will show a list of notes. This setting
             define the list should be reversed or not.
 
-            - default: {default[note-selector][show_reverse]}
-            - current: {current[note-selector][show_reverse]}
+            - default: {default[selector][reverse]}
+            - current: {current[selector][reverse]}
 
             #### page_size ####
 
             Some lolikit command will show a list of notes. This setting
             define how much notes in one page.
 
-            - default: {default[note-selector][page_size]}
-            - current: {current[note-selector][page_size]}
+            - default: {default[selector][page_size]}
+            - current: {current[selector][page_size]}
 
 
 
