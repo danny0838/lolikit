@@ -45,12 +45,12 @@ class HelpCommand(command.Command):
                         ' etc.')
 
         parser.add_argument(
-            '--rules', dest='rules', action='store_true',
-            help='show lolinote ruleset.')
-
-        parser.add_argument(
-            '--config', dest='config', action='store_true',
-            help='show how to configure lolikit and current setting values.')
+            'topic', nargs='?', choices=['rules', 'config'],
+            help=(
+                '\n'
+                'rules  - lolinote ruleset.\n'
+                'config - how to configure lolikit & current setting values.\n'
+                ))
 
         self.parser = parser
 
@@ -58,10 +58,14 @@ class HelpCommand(command.Command):
         if len(sys.argv) == 2:
             self.parser.print_help()
             sys.exit(1)
-        elif args.rules:
+        elif args.topic == 'rules':
             self.show_rules()
-        elif args.config:
+        elif args.topic == 'config':
             self.show_config()
+
+    def show(self, message):
+        show_text = textwrap.dedent(message)
+        print(show_text)
 
     def show_rules(self):
         message = textwrap.dedent("""\
@@ -95,19 +99,27 @@ class HelpCommand(command.Command):
 
 
 
+            -----------------------------------------------------------------
+
+
+
             ## Configuration Format ##
 
             The lolikitrc files is a kind of "ini" format. It look like...
 
                 [selector]
-                reverse = on        # This is comment
+                reverse = on
                 editor  = vim
 
                 [project]
-                ignore_patterns = .swp$    # <- This is a multi-line values
+                ignore_patterns = .swp$    # This is a multi-line values
                                   ~$
                 [fix]
                 newline_mode = posix
+
+
+
+            -----------------------------------------------------------------
 
 
 
@@ -134,6 +146,8 @@ class HelpCommand(command.Command):
             - current: "{current[user][default_project_dir]}"
 
 
+            -----------------------------------------------------------------
+
 
             ### [project] section ###
 
@@ -151,6 +165,8 @@ class HelpCommand(command.Command):
             - default: {default[project][ignore_patterns]}
             - current: {current[project][ignore_patterns]}
 
+
+            -----------------------------------------------------------------
 
 
             ### [selector] section ###
@@ -197,28 +213,41 @@ class HelpCommand(command.Command):
             - default: {default[selector][page_size]}
             - current: {current[selector][page_size]}
 
-
-
-            ### [find] section ###
-
-            #### output_format ####
+            #### find_format ####
 
             Define the output format with "find" command.
 
             - default: "{default[find][output_format]}"
             - current: "{current[find][output_format]}"
 
-
-
-            ### [list] section ###
-
-            #### output_format ####
+            #### list_format ####
 
             Define the output format with "list" command.
 
             - default: "{default[list][output_format]}"
             - current: "{current[list][output_format]}"
 
+
+            -----------------------------------------------------------------
+
+            > Special hint:
+            >
+            > You can use following variables in *_format:
+            >
+            >   - {{title}}
+            >   - {{filename}}
+            >   - {{parent_dirname}}
+            >   - {{absolute_path}}
+            >   - {{root_relative_path}}
+            >   - {{root_relative_dirname}}
+            >   - {{top_dirname}}
+            >   - {{mtime}}
+            >   - {{atime}}
+            >   - {{prepend_resourced_icon}}
+            >   - {{append_resourced_icon}}
+            >   - {{category}}
+
+            -----------------------------------------------------------------
 
 
             ### [fix] section ###

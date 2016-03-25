@@ -47,7 +47,7 @@ class ListCommand(command.Command):
             note_items = [NS.note_item_factory(
                 path,
                 rootdir=self.rootdir,
-                text_format=self.config[self.get_name()]['output_format'],
+                text_format=self.config['selector']['list_format'],
                 default_editor=self.config['selector']['editor'],
                 default_file_browser=self.config['selector']['file_browser'],
                 config=self.config,

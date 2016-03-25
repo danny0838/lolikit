@@ -73,12 +73,8 @@ DEFAULT_CONFIG = OD((
         ('file_browser', _get_default_file_browser()),
         ('reverse', 'no'),
         ('page_size', 10),
-        ))),
-    ('find', OD((
-        ('output_format', '{prepend_resourced_icon}{title}  <<  {category}'),
-        ))),
-    ('list', OD((
-        ('output_format',
+        ('find_format', '{prepend_resourced_icon}{title}  <<  {category}'),
+        ('list_format',
             '[{mtime:%%m/%%d %%H:%%M}] {prepend_resourced_icon}{title}'),
         ))),
     ('fix', OD((
