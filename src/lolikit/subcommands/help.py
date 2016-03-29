@@ -63,9 +63,9 @@ class HelpCommand(command.Command):
         elif args.topic == 'config':
             self.show_config()
 
-    def show(self, message):
-        show_text = textwrap.dedent(message)
-        print(show_text)
+    # def show(self, message):
+    #     show_text = textwrap.dedent(message)
+    #     print(show_text)
 
     def show_rules(self):
         message = textwrap.dedent("""\
@@ -217,15 +217,15 @@ class HelpCommand(command.Command):
 
             Define the output format with "find" command.
 
-            - default: "{default[find][output_format]}"
-            - current: "{current[find][output_format]}"
+            - default: "{default[selector][find_format]}"
+            - current: "{current[selector][find_format]}"
 
             #### list_format ####
 
             Define the output format with "list" command.
 
-            - default: "{default[list][output_format]}"
-            - current: "{current[list][output_format]}"
+            - default: "{default[selector][list_format]}"
+            - current: "{current[selector][list_format]}"
 
 
             -----------------------------------------------------------------
