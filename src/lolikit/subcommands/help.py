@@ -41,16 +41,17 @@ class HelpCommand(command.Command):
             self.get_name(),
             formatter_class=argparse.RawTextHelpFormatter,
             help='show help messages about rules & setting detail. etc.',
-            description='show help messages about rules & setting detail.'
-                        ' etc.')
+            description=(
+                'show help messages about rules & setting detail. etc.\n\n'
+                'include following topic:\n'
+                '  rules    - lolinote ruleset.\n'
+                '  config   - how to configure lolikit.\n'
+                '  selector - how to use lolikit selector.\n'
+                ))
 
         parser.add_argument(
-            'topic', nargs='?', choices=['rules', 'config'],
-            help=(
-                '\n'
-                'rules  - lolinote ruleset.\n'
-                'config - how to configure lolikit & current setting values.\n'
-                ))
+            'topic', nargs='?', choices=['rules', 'config', 'selector'],
+            help='select a topic')
 
         self.parser = parser
 
@@ -62,6 +63,8 @@ class HelpCommand(command.Command):
             self.show_rules()
         elif args.topic == 'config':
             self.show_config()
+        elif args.topic == 'selector':
+            self.show_selector()
 
     # def show(self, message):
     #     show_text = textwrap.dedent(message)
@@ -278,6 +281,47 @@ class HelpCommand(command.Command):
 
             - default: "{default[fix][newline_mode]}"
             - current: "{current[fix][newline_mode]}"
+            """).format(
+            default=defaultconfig.DEFAULT_CONFIG, current=self.config)
+        print(message)
+
+    def show_selector(self):
+        message = textwrap.dedent("""\
+            # Selector #
+
+            Some sub-command, like "list", may startup a command-line UI
+            which be used to select you note or note-related element.
+
+            We call it "selector".
+
+
+
+            ## How It Work? ##
+
+            Basically, input the "leading number" (e.g., 9) of a note you want
+            to open, then press enter. Just it!
+
+            If you want to scrolling the page, press "next" or "prev".
+
+            If you want to exit, press "exit" or a simple blank line.
+
+
+
+            ## Advanced Usage ##
+
+            You can press a "number" + "special character" + "arguments" to
+            trigger more functions. For example...
+
+              - `3`: open a note with default editor.
+              - `3@gvim`: open a note with gvim.
+              - `3/`: open directory of this note with default file browser.
+              - `3/ranger`: open directory of this note with ranger.
+              - `3.`: open attachment selector for this note.
+
+
+
+            > User can pass "?" or "help" in selector to check more detail.
+
             """).format(
             default=defaultconfig.DEFAULT_CONFIG, current=self.config)
         print(message)

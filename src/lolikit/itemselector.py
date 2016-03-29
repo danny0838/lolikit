@@ -191,6 +191,8 @@ class ItemSelector(cmd.Cmd):
         return True
 
     def do_exit(self, arg):
+        '''Exit current selector
+        example: exit'''
         return True
 
     def do_next(self, arg):
