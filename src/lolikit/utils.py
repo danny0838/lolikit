@@ -95,9 +95,9 @@ def get_rootdir(config):
                 return None
 
     def get_default_rootdir():
-        default_project_dir = pathlib.Path(
-            os.path.expanduser(config['user'].get('default_project_dir')))
-        return checkdirs(default_project_dir)
+        default_project = pathlib.Path(
+            os.path.expanduser(config['user'].get('default_project')))
+        return checkdirs(default_project)
 
     current_dir = pathlib.Path(os.getcwd())
     rootdir = checkdirs(current_dir)

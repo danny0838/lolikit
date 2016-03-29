@@ -60,7 +60,7 @@ def _get_default_newline_mode():
 
 DEFAULT_CONFIG = OD((
     ('user', OD((
-        ('default_project_dir', ""),
+        ('default_project', ""),
         ))),
     ('project', OD((
         ('ignore_patterns', ''),

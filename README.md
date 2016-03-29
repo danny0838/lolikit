@@ -103,7 +103,7 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 This version change a lot of configure variables names. Check `loli help --config` if your `lolikitrc` are not work.
 
-  - Enhanced: user can assign a `default_project_dir` in `user` section in your **USER-LEVEL lolikitrc** file. This project will auto be used when current working directory are not within any loli project folder.
+  - Enhanced: user can assign a `default_project` in `user` section in your **USER-LEVEL lolikitrc** file. This project will auto be used when current working directory are not within any loli project folder.
   - Enhanced: note-selector can display a special icon for resourced md.
   - Enhanced: note-selector now have the `reverse` and `show` commands.
   - Enhanced: note-selector can access "resources" of resourced md directly by `<number>.` command format.
