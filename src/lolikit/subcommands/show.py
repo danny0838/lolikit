@@ -42,21 +42,38 @@ class ShowCommand(command.Command):
             description='show current project\'s info')
 
     def run(self, args):
+        def get_size_with_unit(size):
+            """convert size bytes to other unit, return => (size, unit)"""
+            units = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+            for unit in units:
+                if len(str(int(size))) <= 4:
+                    return (size, unit)
+                else:
+                    size = size / 1024
+            return (size, units[-1])
+
         self.require_rootdir()
+
+        md_total_size, md_total_size_unit = get_size_with_unit(
+            self.__get_md_total_size())
+        project_total_size, project_total_size_unit = get_size_with_unit(
+            self.__get_project_total_size())
         info = '\n'.join([
             ' - Current Project Folder  = {rootdir}',
             ' - MD Count                = {md_count:>11,}',
             ' - MD (Resourced) Count    = {rmd_count:>11,}',
             ' - MD Avg. Depth           = {md_avg_depth:>14,.2f}',
-            ' - MD Total Size           = {md_total_size:>14,.2f} KB',
-            ' - Project Total Size      = {project_total_size:>14,.2f} KB',
+            ' - MD Total Size           = {md_total_size:>14,.2f} {md_total_size_unit}',
+            ' - Project Total Size      = {project_total_size:>14,.2f} {project_total_size_unit}',
             ]).format(
                 rootdir=str(self.rootdir),
-                project_total_size=self.__get_project_total_size() / 1024,
                 md_count=len(self.get_all_md_paths()),
                 rmd_count=len(self.get_all_resourced_md_paths()),
-                md_total_size=self.__get_md_total_size() / 1024,
                 md_avg_depth=self.__get_md_avg_depth(),
+                md_total_size=md_total_size,
+                md_total_size_unit=md_total_size_unit,
+                project_total_size=project_total_size,
+                project_total_size_unit=project_total_size_unit,
                 )
         print(info)
 

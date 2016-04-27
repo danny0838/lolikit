@@ -99,6 +99,10 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 # Changelog
 
+## Version 1.4.0
+
+  - Enhanced: beautify `show` command total size calculate result.
+
 ## Version 1.3.0
 
 This version change a lot of configure variables. Check `loli help config` if your `lolikitrc` are not work.
