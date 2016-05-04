@@ -22,15 +22,16 @@ Lolikit is a command line supporting toolkit for Loli project, but not a **requi
 
 Currently the lolikit include the following sub-command...
 
-* find - find some notes which contain some special pattern
-* list - lists some notes that have recently be changed
-* show - show current project status.
-* fix  - point out & help to fix the loli project defect. such like...
-    * file encoding
-    * check the newline format
-    * avoid danger character in filename
-    * remove empty directory.
-    * resourced note directory rename.
+  - dig  - open a file browser in current project's root directory.
+  - find - find some notes which contain some special pattern
+  - list - lists some notes that have recently be changed
+  - show - show current project status.
+  - fix  - point out & help to fix the loli project defect. such like...
+    - file encoding
+    - check the newline format
+    - avoid danger character in filename
+    - remove empty directory.
+    - resourced note directory rename.
 
 
 
@@ -38,13 +39,13 @@ Currently the lolikit include the following sub-command...
 
 Everything which other general tools can suffice better, and / or not really often need. Such like...
 
-* file browsing
-* edit
-* backup
-* version control
-* sync
-* search by filename
-* rename a filename
+  - file browsing
+  - edit
+  - backup
+  - version control
+  - sync
+  - search by filename
+  - rename a filename
 
 
 
