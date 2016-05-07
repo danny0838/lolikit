@@ -53,15 +53,15 @@ class FixCommand(command.Command):
                         ' automatically.')
 
         parser.add_argument(
-            '-v', dest='verbose', action='store_true',
+            '-v', '--verbose', dest='verbose', action='store_true',
             help='print information verbosely')
 
         parser.add_argument(
-            '-r', dest='resolve', action='store_true',
+            '-r', '--resolve', dest='resolve', action='store_true',
             help='try to resolve all problem interactively')
 
         parser.add_argument(
-            '-y', dest='always_yes', action='store_true',
+            '-y', '--always-yes', dest='always_yes', action='store_true',
             help='auto resolve problems without confirm (must use with -r)')
 
     def run(self, args):
