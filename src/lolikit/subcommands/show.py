@@ -59,12 +59,14 @@ class ShowCommand(command.Command):
         project_total_size, project_total_size_unit = get_size_with_unit(
             self.__get_project_total_size())
         info = '\n'.join([
-            ' - Current Project Folder  = {rootdir}',
-            ' - MD Count                = {md_count:>11,}',
-            ' - MD (Resourced) Count    = {rmd_count:>11,}',
-            ' - MD Avg. Depth           = {md_avg_depth:>14,.2f}',
-            ' - MD Total Size           = {md_total_size:>14,.2f} {md_total_size_unit}',
-            ' - Project Total Size      = {project_total_size:>14,.2f} {project_total_size_unit}',
+            (' - Current Project Folder  =  {rootdir}'),
+            (' - MD Count                = {md_count:>6,}'),
+            (' - MD (Resourced) Count    = {rmd_count:>6,}'),
+            (' - MD Avg. Depth           = {md_avg_depth:>9,.2f}'),
+            (' - MD Total Size           = {md_total_size:>9,.2f}'
+             ' {md_total_size_unit}'),
+            (' - Project Total Size      = {project_total_size:>9,.2f}'
+             ' {project_total_size_unit}'),
             ]).format(
                 rootdir=str(self.rootdir),
                 md_count=len(self.get_all_md_paths()),
