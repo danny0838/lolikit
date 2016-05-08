@@ -36,7 +36,7 @@ _lolikit_bash_completion()
     compopt -o filenames
 
     if [[ ${prev} == loli ]] ; then
-        opts="do find fix help list show --help --version"
+        opts="do find check help list show --help --version"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     elif [[ ${subcommand} == config ]] ; then
@@ -58,7 +58,7 @@ _lolikit_bash_completion()
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         fi
 
-    elif [[ ${subcommand} == fix ]] ; then
+    elif [[ ${subcommand} == check ]] ; then
         opts="--verbose --resolve --always-yes --help"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 

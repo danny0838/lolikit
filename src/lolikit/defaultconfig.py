@@ -77,7 +77,7 @@ DEFAULT_CONFIG = OD((
         ('list_format',
             '[{mtime:%%m/%%d %%H:%%M}] {prepend_resourced_icon}{title}'),
         ))),
-    ('fix', OD((
+    ('check', OD((
         ('danger_pathname_chars', '\\/:"*?<>|'),
         ('danger_pathname_chars_fix_to', '='),
         ('newline_mode', _get_default_newline_mode()),

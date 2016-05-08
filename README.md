@@ -22,11 +22,11 @@ Lolikit is a command line supporting toolkit for Loli project, but not a **requi
 
 Currently the lolikit include the following sub-command...
 
-  - do   - run some executable on a path which based on current project's root directory.
-  - find - find some notes which contain some special pattern
-  - list - lists some notes that have recently be changed
-  - show - show current project status.
-  - fix  - point out & help to fix the loli project defect. such like...
+  - do    - run some executable on a path which based on current project's root directory.
+  - find  - find some notes which contain some special pattern
+  - list  - lists some notes that have recently be changed
+  - show  - show current project status.
+  - check - point out & help to fix the loli project defect. such like...
     - file encoding
     - check the newline format
     - avoid danger character in filename
@@ -105,6 +105,7 @@ You can run `loli fix` to check inconsistent of the newline format.
   - Enhanced: beautify `show` command total size calculate result.
   - Enhanced: `find` command now support path filtering.
   - Tweaked: `dig` command rename to `do` and change the API. help user working on special file or directory easily.
+  - Tweaked: `fix` command rename to `check`. Some `fix` section in settings also move to `check` section.
   - Added: Bash completion support. Try it with `do` command!
   - Added: `config` command which can help user access those config settings.
   - Fixed: `show` command zero division when current project folder is empty.

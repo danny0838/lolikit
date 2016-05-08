@@ -253,22 +253,22 @@ class HelpCommand(command.Command):
             -----------------------------------------------------------------
 
 
-            ### [fix] section ###
+            ### [check] section ###
 
             #### danger_pathname_chars ####
 
             Define what chars is danger in pathname.
 
-            - default: "{default[fix][danger_pathname_chars]}"
-            - current: "{current[fix][danger_pathname_chars]}"
+            - default: "{default[check][danger_pathname_chars]}"
+            - current: "{current[check][danger_pathname_chars]}"
 
             #### danger_pathname_chars_fix_to ####
 
             Set which char will be used to replace the danger chars when
             fixing.
 
-            - default: "{default[fix][danger_pathname_chars_fix_to]}"
-            - current: "{current[fix][danger_pathname_chars_fix_to]}"
+            - default: "{default[check][danger_pathname_chars_fix_to]}"
+            - current: "{current[check][danger_pathname_chars_fix_to]}"
 
             #### newline_mode ####
 
@@ -279,8 +279,8 @@ class HelpCommand(command.Command):
                 - windows
                 - mac
 
-            - default: "{default[fix][newline_mode]}"
-            - current: "{current[fix][newline_mode]}"
+            - default: "{default[check][newline_mode]}"
+            - current: "{current[check][newline_mode]}"
             """).format(
             default=defaultconfig.DEFAULT_CONFIG, current=self.config)
         print(message)

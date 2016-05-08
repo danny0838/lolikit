@@ -33,9 +33,9 @@ from .. import command
 from .. import utils
 
 
-class FixCommand(command.Command):
+class CheckCommand(command.Command):
     def get_name(self):
-        return 'fix'
+        return 'check'
 
     def register_parser(self, subparsers):
         parser = subparsers.add_parser(
@@ -112,9 +112,9 @@ class FixCommand(command.Command):
 
     def __get_small_size_paths(self):
         small_size = 50
-        small_size_path = [path for path in self.get_all_md_paths()
-                           if path.stat().st_size < small_size]
-        return small_size_path
+        small_size_paths = [path for path in self.get_all_md_paths()
+                            if path.stat().st_size < small_size]
+        return small_size_paths
 
     def __get_empty_content_paths(self):
         small_size_paths = self.__get_small_size_paths()
@@ -214,7 +214,7 @@ class FixCommand(command.Command):
             return None
 
     def __get_inconsistent_newline_paths(self):
-        want_newline_mode = self.config['fix']['newline_mode']
+        want_newline_mode = self.config[self.get_name()]['newline_mode']
         paths = [path for path in self.get_all_md_paths()
                  if self.__get_newline_mode(path) not in (
                      want_newline_mode, None)]
@@ -242,7 +242,7 @@ class FixCommand(command.Command):
                     'to_mode "{}" not defined'.format(to_mode))
             return content.replace(from_newline, to_newline)
 
-        want_newline_mode = self.config['fix']['newline_mode']
+        want_newline_mode = self.config[self.get_name()]['newline_mode']
         count = 0
         print('  changing newline...')
         for path in paths:
@@ -259,7 +259,7 @@ class FixCommand(command.Command):
         print('\n  [RESOLVED] Changed files: {}'.format(count))
 
     def __deal_inconsistent_newline_paths(self, args):
-        want_newline_mode = self.config['fix']['newline_mode']
+        want_newline_mode = self.config[self.get_name()]['newline_mode']
         paths = self.__get_inconsistent_newline_paths()
         self.__deal(args=args,
                     paths=paths,

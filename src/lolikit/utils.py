@@ -71,7 +71,7 @@ def get_config(rootdir=None):
 
     def check_config(config):
         valid_newline_mode = ('posix', 'windows', 'mac')
-        if config['fix']['newline_mode'] not in valid_newline_mode:
+        if config['check']['newline_mode'] not in valid_newline_mode:
             raise ConfigError(
                 '[CONFIGERROR] "fix:newline_mode" must one of {}'
                 .format(valid_newline_mode))
