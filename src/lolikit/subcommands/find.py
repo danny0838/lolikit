@@ -39,12 +39,18 @@ class FindCommand(command.Command):
         parser = subparsers.add_parser(
             self.get_name(),
             formatter_class=argparse.RawTextHelpFormatter,
-            help='find some notes which contain some special pattern',
-            description='find some notes which contain some special pattern')
+            help='find some notes which contain some special patterns',
+            description='find some notes which contain some special patterns')
 
         parser.add_argument(
-            'pattern', metavar='PATTERN', type=str, nargs='+',
-            help='string or regex pattern for finding')
+            'patterns', metavar='PATTERN', type=str, nargs='+',
+            help='string or regex patterns for finding')
+
+        parser.add_argument(
+            '-p', '--path-patterns', dest="path_patterns", metavar='PATTERN',
+            type=str, nargs='*',
+            help=('filter patterns should match on pathname of notes\n'
+                  '(not include parents of project\'s root)'))
 
     def run(self, args):
         def start_find_selector():
@@ -57,7 +63,7 @@ class FindCommand(command.Command):
                 config=self.config,
                 )
                 for data in sorted(
-                    self.get_all_matches(args.pattern),
+                    self.get_all_matches(args.patterns, args.path_patterns),
                     key=lambda data: self.calculate_score(*data),
                     reverse=True)]
             if len(note_items) > 0:
@@ -66,7 +72,7 @@ class FindCommand(command.Command):
         self.require_rootdir()
         start_find_selector()
 
-    def get_all_matches(self, patterns):
+    def get_all_matches(self, patterns, path_patterns):
         """
         yield: (path, content, title_matches_list, content_matches_list)
         """
@@ -83,7 +89,20 @@ class FindCommand(command.Command):
 
         progs = [re.compile(pattern, re.IGNORECASE)
                  for pattern in patterns]
-        for path in self.get_all_md_paths():
+
+        if path_patterns:
+            path_progs = [re.compile(path_pattern, re.IGNORECASE)
+                          for path_pattern in path_patterns]
+            all_md_paths = (path for path in self.get_all_md_paths()
+                            if any(
+                                prog.search(
+                                    str(path.relative_to(self.rootdir)))
+                                for prog in path_progs
+                                ))
+        else:
+            all_md_paths = self.get_all_md_paths()
+
+        for path in all_md_paths:
             (content,
              title_matches_list,
              content_matches_list) = get_matches(path, progs)

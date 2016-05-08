@@ -103,6 +103,7 @@ You can run `loli fix` to check inconsistent of the newline format.
 ## Version 1.4.0
 
   - Enhanced: beautify `show` command total size calculate result.
+  - Enhanced: `find` command now support path filtering.
 
 ## Version 1.3.0
 
