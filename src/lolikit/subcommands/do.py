@@ -32,17 +32,17 @@ from .. import command
 from .. import utils
 
 
-class DigCommand(command.Command):
+class DoCommand(command.Command):
     def get_name(self):
-        return 'dig'
+        return 'do'
 
     def register_parser(self, subparsers):
         parser = subparsers.add_parser(
             self.get_name(),
             formatter_class=argparse.RawTextHelpFormatter,
-            help='run some task on a path which based on project'
+            help='do some task on a path which based on project'
                  ' root directory',
-            description='run some task on a path which based on project'
+            description='do some task on a path which based on project'
                         ' root directory\n'
                         'if user not assign EXECUTABLE, then default'
                         ' editor or default file browser will be used.')
@@ -55,9 +55,9 @@ class DigCommand(command.Command):
                  'blank = project root directory')
 
         parser.add_argument(
-            '-e', '--executable', dest='executable', metavar='EXECUTABLE',
+            '-x', '--executable', dest='executable', metavar='EXECUTABLE',
             help='assign any executable can accept one path argument\n'
-                 'e.g., -e vim, -e touch, -e trash')
+                 'e.g., -x vim, -x touch, -x trash')
 
     def run(self, args):
         self.require_rootdir()
@@ -77,4 +77,4 @@ class DigCommand(command.Command):
         try:
             subprocess.call(command)
         except FileNotFoundError:
-            print('opener: "{}" not found. cancel.'.format(command[0]))
+            print('executable: "{}" not found. cancel.'.format(command[0]))
