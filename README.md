@@ -107,6 +107,7 @@ You can run `loli fix` to check inconsistent of the newline format.
   - Tweaked: `dig` command change the API, and can access special file or directory easily.
   - Added: Bash completion support. Try it with `dig` command!
   - Added: `config` command which can help user access those config settings.
+  - Fixed: `show` command zero division when current project folder is empty.
 
 ## Version 1.3.0
 

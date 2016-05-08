@@ -99,4 +99,7 @@ class ShowCommand(command.Command):
         # import collections
         # counter = collections.Counter(path_deeps)
         # print(sorted(counter.items(), key=lambda x: x[0]), )
-        return sum(path_depths) / len(path_depths)
+        try:
+            return sum(path_depths) / len(path_depths)
+        except ZeroDivisionError:
+            return 0
