@@ -40,7 +40,7 @@ class FindCommand(command.Command):
             self.get_name(),
             formatter_class=argparse.RawTextHelpFormatter,
             help='find some notes which contain some special pattern',
-            description='find aome notes which contain some special pattern')
+            description='find some notes which contain some special pattern')
 
         parser.add_argument(
             'pattern', metavar='PATTERN', type=str, nargs='+',
