@@ -1,39 +1,61 @@
 _lolikit_bash_completion()
 {
-    local cur prev opts
+    local cur prev opts subcommand
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     subcommand="${COMP_WORDS[1]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     prevprev="${COMP_WORDS[COMP_CWORD-2]}"
 
+    compopt -o filenames
+
     if [[ ${prev} == loli ]] ; then
-        opts="config dig find fix help list show --help --version"
+        opts="dig find fix help list show --help --version"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
     elif [[ ${subcommand} == config ]] ; then
         opts="--user-settings --project-settings"
         COMPREPLY=( $(compgen -W "${opts}" -A command -- ${cur}) )
+
     elif [[ ${subcommand} == dig ]] ; then
-        opts="--help"
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        if [[ ${prev} == '-e' || ${prev} == '--executable' ]] ; then
+            COMPREPLY=( $(compgen -A command -- ${cur}) )
+        else
+            rootdir="$(loli --get-root)"
+            if [[ ${rootdir} != '' ]] ; then
+                local IFS=$'\n'
+                local _pwd=$(pwd)
+                cd "${rootdir}" > /dev/null
+                compopt -o nospace
+                COMPREPLY=( $(compgen -o plusdirs -f -- ${cur}) )
+                for ((i=0; i < ${#COMPREPLY[@]}; i++)); do
+                    [ -d "${COMPREPLY[$i]}" ] && COMPREPLY[$i]=${COMPREPLY[$i]}/
+                done
+                cd ${_pwd} > /dev/null
+            fi
+        fi
+
     elif [[ ${subcommand} == find ]] ; then
         opts="--help --path-patterns"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
     elif [[ ${subcommand} == fix ]] ; then
         opts="--help --verbose --resolve --always-yes"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
     elif [[ ${subcommand} == help ]] ; then
         opts="rules config selector --help"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    elif [[ ${subcommand} == list ]] ; then
-        opts="--help"
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    elif [[ ${subcommand} == show ]] ; then
-        opts="--help"
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    else
-        COMPREPLY=( $(compgen -df -- ${cur}) )
+
+    # elif [[ ${subcommand} == list ]] ; then
+    #     opts="--help"
+    #     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
+    # elif [[ ${subcommand} == show ]] ; then
+    #     opts="--help"
+    #     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
     fi
     return 0
 }
-complete -F _lolikit_bash_completion loli
+complete -o default -F _lolikit_bash_completion loli

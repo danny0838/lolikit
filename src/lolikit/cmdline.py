@@ -42,6 +42,12 @@ def build_parser(config, commands):
         parser.add_argument(
             '--version', action='version', version=info.VERSION)
 
+        parser.add_argument(
+            '--get-root', dest='get_root', action='store_true',
+            help=argparse.SUPPRESS
+            # help='get root dir of current project and exit'
+            )
+
         return parser
 
     def get_subparsers(parser):
@@ -62,7 +68,11 @@ def build_parser(config, commands):
     return parser
 
 
-def process(args, commands):
+def process(args, commands, rootdir):
+    if args.get_root:
+        print(str(rootdir) if rootdir else '')
+        return
+
     for cmd in commands:
         if args.command == cmd.get_name():
             cmd.run(args)
@@ -80,4 +90,4 @@ def main():
         parser.print_help()
         sys.exit(1)
     args = parser.parse_args()
-    return process(args, commands)
+    return process(args, commands, rootdir)

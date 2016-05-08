@@ -26,6 +26,7 @@
 
 import argparse
 import subprocess
+import pathlib
 
 from .. import command
 from .. import utils
@@ -39,18 +40,40 @@ class DigCommand(command.Command):
         parser = subparsers.add_parser(
             self.get_name(),
             formatter_class=argparse.RawTextHelpFormatter,
-            help='open a file browser in current project\'s root directory.',
-            description='open file browser in current project\'s root.')
+            help='run some task on a path which based on project'
+                 ' root directory',
+            description='run some task on a path which based on project'
+                        ' root directory\n'
+                        'if user not assign EXECUTABLE, then default'
+                        ' editor or default file browser will be used.')
 
         parser.add_argument(
-            'file_browser', metavar='FILE_BROWSER', type=str, nargs='?',
-            default=self.config['selector']['file_browser'],
-            help='assign a file browser program.')
+            'entry', metavar='ENTRY', type=pathlib.Path, nargs='?',
+            default=pathlib.Path(''),
+            help='file / directory path based on project root dir.'
+                 ' the ENTRY allow not exists\n'
+                 'blank = project root directory')
+
+        parser.add_argument(
+            '-e', '--executable', dest='executable', metavar='EXECUTABLE',
+            help='assign any executable can accept one path argument\n'
+                 'e.g., -e vim, -e touch, -e trash')
 
     def run(self, args):
         self.require_rootdir()
 
-        command = utils.get_opener_command(args.file_browser, self.rootdir)
+        path = self.rootdir / args.entry
+
+        if args.executable:
+            executable = args.executable
+        else:
+            if path.is_dir():
+                executable = self.config['selector']['file_browser']
+            else:
+                executable = self.config['selector']['editor']
+
+        command = utils.get_opener_command(executable, path)
+
         try:
             subprocess.call(command)
         except FileNotFoundError:
