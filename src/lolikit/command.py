@@ -104,7 +104,8 @@ class Command(metaclass=abc.ABCMeta):
     def require_rootdir(self):
         if self.rootdir is None:
             print(
-                'abort: This command should run within a loli project '
+                'abort: This command / function should run within a loli'
+                ' project '
                 'folder.\n'
                 '  Which defined by a ".loli" folder in project root dir.\n'
                 '  If ".loli" no exists yet, you may want to create a empty '

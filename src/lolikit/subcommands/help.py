@@ -111,12 +111,12 @@ class HelpCommand(command.Command):
             The lolikitrc files is a kind of "ini" format. It look like...
 
                 [selector]
-                reverse = on
+                reverse = on             # on, off: boolean value
                 editor  = vim
 
                 [project]
-                ignore_patterns = .swp$    # This is a multi-line values
-                                  ~$
+                ignore_patterns = .swp$  # This is a multi-line format
+                                  ~$     # use this format to set multi-values
                 [fix]
                 newline_mode = posix
 

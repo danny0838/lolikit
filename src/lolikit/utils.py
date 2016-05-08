@@ -40,16 +40,26 @@ class ConfigError(Exception):
     pass
 
 
+def get_user_lolikitrc_path():
+    user_lolikitrc = pathlib.Path(
+        os.path.expanduser('~')) / '.lolikitrc'
+    return user_lolikitrc
+
+
+def get_project_lolikitrc_path(rootdir):
+    project_lolikitrc = rootdir / '.loli' / 'lolikitrc'
+    return project_lolikitrc
+
+
 def get_config(rootdir=None):
     def read_config(rootdir):
         config = configparser.ConfigParser()
         config.read_dict(defaultconfig.DEFAULT_CONFIG)
-        user_lolikitrc = pathlib.Path(
-            os.path.expanduser('~')) / '.lolikitrc'
+        user_lolikitrc = get_user_lolikitrc_path()
         if user_lolikitrc.is_file():
             config.read(str(user_lolikitrc))
         if rootdir is not None:
-            project_lolikitrc = rootdir / '.loli' / 'lolikitrc'
+            project_lolikitrc = get_project_lolikitrc_path(rootdir)
             if project_lolikitrc.is_file():
                 config.read(str(project_lolikitrc))
         return config

@@ -105,6 +105,7 @@ You can run `loli fix` to check inconsistent of the newline format.
   - Enhanced: beautify `show` command total size calculate result.
   - Enhanced: `find` command now support path filtering.
   - Added: Bash auto completion support.
+  - Added: `config` command which can help user access those config settings.
 
 ## Version 1.3.0
 
