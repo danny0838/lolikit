@@ -53,9 +53,12 @@ setup(
     setup_requires=[],
     package_dir={'': 'src'},
     packages=['lolikit', 'lolikit.subcommands'],
+    data_files=[
+        ('/etc/bash_completion.d/', ['datafiles/lolikit.bash-completion']),
+    ],
     entry_points={
         'console_scripts': ['loli = lolikit.cmdline:main'],
         'setuptools.installation': ['eggsecutable = lolikit.cmdline:main']
         },
     keywords='notes-manager',
-    )
+)

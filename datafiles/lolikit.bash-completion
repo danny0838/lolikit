@@ -1,0 +1,35 @@
+_lolikit_bash_completion()
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    prevprev="${COMP_WORDS[COMP_CWORD-2]}"
+
+    if [[ ${prev} == loli ]] ; then
+        opts="dig find fix help list show --help --version"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    elif [[ ${prev} == dig ]] ; then
+        opts="--help"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    elif [[ ${prev} == find ]] ; then
+        opts="--help --path-patterns"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    elif [[ ${prev} == fix ]] ; then
+        opts="--help --verbose --resolve --always-yes"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    elif [[ ${prev} == help ]] ; then
+        opts="rules config selector --help"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    elif [[ ${prev} == list ]] ; then
+        opts="--help"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    elif [[ ${prev} == show ]] ; then
+        opts="--help"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    else
+        COMPREPLY=( $(compgen -df -- ${cur}) )
+    fi
+    return 0
+}
+complete -F _lolikit_bash_completion loli
