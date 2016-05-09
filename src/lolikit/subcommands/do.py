@@ -40,16 +40,16 @@ class DoCommand(command.Command):
         parser = subparsers.add_parser(
             self.get_name(),
             formatter_class=argparse.RawTextHelpFormatter,
-            help='do some task on a path based on project root dir',
-            description='do some task on a path based on project root dir\n'
-                        'if user not assign EXECUTABLE, then default'
-                        ' editor or default file browser will be used.')
+            help='do some task on a path based on project\'s root dir',
+            description='do some task on a path based on project\'s root dir\n'
+                        '\n'
+                        'if user not assign EXECUTABLE, then default\n'
+                        'editor or default file browser will be used.')
 
         parser.add_argument(
             'entry', metavar='ENTRY', type=pathlib.Path, nargs='?',
             default=pathlib.Path(''),
-            help='file / directory path based on project root dir.'
-                 ' the ENTRY allow not exists\n'
+            help='file / directory path based on project root dir.\n'
                  'blank = project root directory')
 
         parser.add_argument(
