@@ -102,13 +102,14 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 ## Version 1.4.0
 
+  - Fixed: `show` command zero division when current project folder is empty.
   - Enhanced: beautify `show` command total size calculate result.
   - Enhanced: `find` command now support path filtering.
   - Tweaked: `dig` command rename to `do` and change the API. help user working on special file or directory easily.
   - Tweaked: `fix` command rename to `check`. Some `fix` section in settings also move to `check` section.
   - Added: Bash completion support. Try it with `do` command!
   - Added: `config` command which can help user access those config settings.
-  - Fixed: `show` command zero division when current project folder is empty.
+  - Added: `init` command which can help user create a new loli project.
 
 ## Version 1.3.0
 

@@ -93,24 +93,25 @@ def register_signal_handler():
     signal.signal(signal.SIGINT, signal_handler)
 
 
-def get_rootdir(config):
-    def checkdirs(current_dir):
-        paths = [path for path in current_dir.glob('.loli')]
-        if len(paths) == 1 and paths[0].is_dir():
-            return current_dir
+def get_rootdir_from_parents(current_dir):
+    paths = [path for path in current_dir.glob('.loli')]
+    if len(paths) == 1 and paths[0].is_dir():
+        return current_dir
+    else:
+        if current_dir != current_dir.parent:
+            return get_rootdir_from_parents(current_dir.parent)
         else:
-            if current_dir != current_dir.parent:
-                return checkdirs(current_dir.parent)
-            else:
-                return None
+            return None
 
+
+def get_rootdir(config):
     def get_default_rootdir():
         default_project = pathlib.Path(
             os.path.expanduser(config['user'].get('default_project')))
-        return checkdirs(default_project)
+        return get_rootdir_from_parents(default_project)
 
     current_dir = pathlib.Path(os.getcwd())
-    rootdir = checkdirs(current_dir)
+    rootdir = get_rootdir_from_parents(current_dir)
     if rootdir is None:
         rootdir = get_default_rootdir()
     return rootdir

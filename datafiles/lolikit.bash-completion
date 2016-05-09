@@ -36,7 +36,7 @@ _lolikit_bash_completion()
     compopt -o filenames
 
     if [[ ${prev} == loli ]] ; then
-        opts="do find check help list show --help --version"
+        opts="do find check help list show init --help --version"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     elif [[ ${subcommand} == config ]] ; then
@@ -65,6 +65,9 @@ _lolikit_bash_completion()
     elif [[ ${subcommand} == help ]] ; then
         opts="rules config selector --help"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
+    elif [[ ${subcommand} == init ]] ; then
+        COMPREPLY=( $(compgen -o plusdirs -f -- ${cur}) )
 
     # elif [[ ${subcommand} == list ]] ; then
     #     opts="--help"

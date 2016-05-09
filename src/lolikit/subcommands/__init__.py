@@ -1,4 +1,5 @@
 __all__ = [
+    'init',
     'help',
     'find',
     'list',
