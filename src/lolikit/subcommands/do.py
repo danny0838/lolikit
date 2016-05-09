@@ -40,10 +40,8 @@ class DoCommand(command.Command):
         parser = subparsers.add_parser(
             self.get_name(),
             formatter_class=argparse.RawTextHelpFormatter,
-            help='do some task on a path which based on project'
-                 ' root directory',
-            description='do some task on a path which based on project'
-                        ' root directory\n'
+            help='do some task on a path based on project root dir',
+            description='do some task on a path based on project root dir\n'
                         'if user not assign EXECUTABLE, then default'
                         ' editor or default file browser will be used.')
 
