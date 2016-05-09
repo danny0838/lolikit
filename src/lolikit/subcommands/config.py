@@ -73,12 +73,13 @@ class ConfigCommand(command.Command):
             command = utils.get_opener_command(opener, path)
             subprocess.call(command)
 
-        def write_config_if_not_exists(path):
+        def write_config_if_not_exists(path, remove_section_names):
             if not path.exists():
                 with open(str(path), mode='w', encoding='utf8') as f:
                     commented_config_str = '\n'.join(
                         '# ' + line if line else ''
-                        for line in self.__get_default_config_str().split('\n')
+                        for line in self.__get_default_config_str(
+                            remove_section_names).split('\n')
                     )
                     commented_config_str = (
                         '# See "loli help config" for more detail\n\n' +
@@ -87,16 +88,21 @@ class ConfigCommand(command.Command):
 
         if args.user_settings:
             path = utils.get_user_lolikitrc_path()
+            write_config_if_not_exists(path, ['project'])
             edit(path)
         elif args.project_settings:
             self.require_rootdir()
             path = utils.get_project_lolikitrc_path(self.rootdir)
-            write_config_if_not_exists(path)
+            write_config_if_not_exists(path, ['user'])
             edit(path)
         else:
             self.__print_current_config()
 
-    def __get_config_str(self, config):
+    def __get_config_str(self, config, remove_section_names=None):
+        if remove_section_names:
+            for name in remove_section_names:
+                config.remove_section(name)
+
         stringio = io.StringIO()
         config.write(stringio)
         stringio.seek(0)
@@ -105,10 +111,10 @@ class ConfigCommand(command.Command):
     def __get_self_config_str(self):
         return self.__get_config_str(self.config)
 
-    def __get_default_config_str(self):
+    def __get_default_config_str(self, remove_section_names):
         default_config = configparser.ConfigParser()
         default_config.read_dict(defaultconfig.DEFAULT_CONFIG)
-        return self.__get_config_str(default_config)
+        return self.__get_config_str(default_config, remove_section_names)
 
     def __print_current_config(self):
         print(self.__get_self_config_str())
