@@ -26,6 +26,7 @@
 import datetime as DT
 import subprocess
 import re
+import sys
 
 import termcolor as TC
 
@@ -85,11 +86,19 @@ class NoteInfo():
 
     @property
     def prepend_resourced_icon(self):
-        return '+ ' if utils.is_rmd(self.path) else '  '
+        icon = '+ ' if utils.is_rmd(self.path) else '  '
+        if sys.platform.startswith('win'):
+            return icon
+        else:
+            return TC.colored(icon, 'green', attrs=['bold'])
 
     @property
     def append_resourced_icon(self):
-        return ' +' if utils.is_rmd(self.path) else '  '
+        icon = ' +' if utils.is_rmd(self.path) else '  '
+        if sys.platform.startswith('win'):
+            return icon
+        else:
+            return TC.colored(icon, 'green', attrs=['bold'])
 
     @property
     def category(self):
@@ -109,10 +118,8 @@ class NoteInfo():
             'top_dirname': self.top_dirname,
             'mtime': self.mtime,
             'atime': self.atime,
-            'prepend_resourced_icon': TC.colored(
-                self.prepend_resourced_icon, 'green', attrs=['bold']),
-            'append_resourced_icon': TC.colored(
-                self.append_resourced_icon, 'green', attrs=['bold']),
+            'prepend_resourced_icon': self.prepend_resourced_icon,
+            'append_resourced_icon': self.append_resourced_icon,
             'category': self.category,
             }
 
