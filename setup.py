@@ -35,6 +35,14 @@ if not sys.version_info >= (3, 4, 0):
     print("ERROR: You cannot install because python version < 3.4")
     sys.exit(1)
 
+
+def get_data_files():
+    if sys.platform.startswith('win'):
+        return []
+    else:
+        return [
+            ('/etc/bash_completion.d/', ['datafiles/lolikit.bash-completion'])]
+
 setup(
     name=info.PROJECT_NAME,
     version=info.VERSION,
@@ -57,9 +65,7 @@ setup(
     package_dir={'': 'src'},
     packages=['lolikit', 'lolikit.subcommands'],
     include_package_data=True,
-    data_files=[
-        ('/etc/bash_completion.d/', ['datafiles/lolikit.bash-completion']),
-    ],
+    data_files=get_data_files(),
     entry_points={
         'console_scripts': ['loli = lolikit.cmdline:main'],
         'setuptools.installation': ['eggsecutable = lolikit.cmdline:main']
