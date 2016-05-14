@@ -66,7 +66,7 @@ def get_config(rootdir=None):
 
     def expand_config(config):
         config['project']['ignore_patterns'] += (
-            '\n^\.loli($|' + os.sep + ')')
+            '\n^\.loli($|' + ('\\\\' if os.sep == '\\' else os.sep) + ')')
         return config
 
     def check_config(config):
