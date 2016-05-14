@@ -102,15 +102,16 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 ## Version 1.4.0
 
-  - Fixed: `loli show` command zero division when current project folder is empty.
-  - Enhanced: beautify `loli show` command total size calculate result.
-  - Enhanced: `loli find` command now support path filtering.
-  - Tweaked: `loli dig` command rename to `loli do` and change the API. help user working on special file or directory easily.
-  - Tweaked: `loli fix` command rename to `loli check`. And `fix` section in settings also move to `check` section too.
+  - Fixed: a lot of bugs work with windows platform.
+  - Fixed: `loli show` cause zero division when current project folder is empty.
+  - Tweaked: `loli dig` rename to `loli do` and change the API. Make user working on special file or directory easily.
+  - Tweaked: `loli fix` rename to `loli check`. And the `fix` section in configure files also move to `check` section too.
+  - Enhanced: beautify `loli show` result.
+  - Enhanced: `loli find` now support path filtering.
   - Added: Bash completion support. Try it with `do` command!
-  - Added: `loli config` command which can help user access those config settings.
-  - Added: `loli init` command which can help user create a new loli project.
-  - Added: `loli serve` command which can startup a build-in mini web server and render markdown to html. (use commonmark spec.)
+  - Added: `loli config` help user to access their's configure easily.
+  - Added: `loli init` help user to create a new loli project.
+  - Added: `loli serve` command can startup a build-in mini web server and render markdown to html. (use commonmark spec.)
 
 ## Version 1.3.0
 
