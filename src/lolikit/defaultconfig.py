@@ -35,7 +35,7 @@ def _get_default_editor():
     elif sys.platform.startswith('darwin'):
         return 'open'
     elif sys.platform.startswith('win'):
-        return 'start'
+        return 'cmd /c \'{path}\''
 
 
 def _get_default_file_browser():
@@ -44,7 +44,7 @@ def _get_default_file_browser():
     elif sys.platform.startswith('darwin'):
         return 'open'
     elif sys.platform.startswith('win'):
-        return 'explorer'
+        return 'cmd /c \'{path}\''
 
 
 def _get_default_newline_mode():
