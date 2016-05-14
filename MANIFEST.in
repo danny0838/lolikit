@@ -1,0 +1,3 @@
+recursive-include src/lolikit/subcommands/servedata *
+recursive-exclude src/lolikit/subcommands/servedata *.swp
+include README.md

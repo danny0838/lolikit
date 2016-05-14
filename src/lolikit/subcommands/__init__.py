@@ -7,4 +7,5 @@ __all__ = [
     'show',
     'do',
     'config',
+    'serve',
 ]

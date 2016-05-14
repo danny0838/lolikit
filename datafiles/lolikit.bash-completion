@@ -36,7 +36,7 @@ _lolikit_bash_completion()
     compopt -o filenames
 
     if [[ ${prev} == loli ]] ; then
-        opts="do find check help list show init --help --version"
+        opts="do find check help list show init serve --version"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     elif [[ ${subcommand} == config ]] ; then
@@ -59,15 +59,24 @@ _lolikit_bash_completion()
         fi
 
     elif [[ ${subcommand} == check ]] ; then
-        opts="--verbose --resolve --always-yes --help"
+        opts="--verbose --resolve --always-yes"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     elif [[ ${subcommand} == help ]] ; then
-        opts="rules config selector --help"
+        opts="rules config selector"
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     elif [[ ${subcommand} == init ]] ; then
         COMPREPLY=( $(compgen -o plusdirs -f -- ${cur}) )
+
+    elif [[ ${subcommand} == serve ]] ; then
+        if [[ ${prev} == '-p' || ${prev} == '--port' ]] ; then
+            opts=""
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        else
+            opts="--remote --debug --port"
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        fi
 
     # elif [[ ${subcommand} == list ]] ; then
     #     opts="--help"

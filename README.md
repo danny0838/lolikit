@@ -32,6 +32,7 @@ Currently the lolikit include the following sub-command...
     - avoid danger character in filename
     - remove empty directory.
     - resourced note directory rename.
+  - serve - startup a mini server to render your notes.
 
 
 
@@ -70,8 +71,7 @@ Change current working directory into you Loli project folder (or sub-folder). T
     loli --help
     loli find <keyword>
     loli list
-    loli fix
-    loli fix -h
+    loli check
     ...
 
 
@@ -102,14 +102,15 @@ You can run `loli fix` to check inconsistent of the newline format.
 
 ## Version 1.4.0
 
-  - Fixed: `show` command zero division when current project folder is empty.
-  - Enhanced: beautify `show` command total size calculate result.
-  - Enhanced: `find` command now support path filtering.
-  - Tweaked: `dig` command rename to `do` and change the API. help user working on special file or directory easily.
-  - Tweaked: `fix` command rename to `check`. Some `fix` section in settings also move to `check` section.
+  - Fixed: `loli show` command zero division when current project folder is empty.
+  - Enhanced: beautify `loli show` command total size calculate result.
+  - Enhanced: `loli find` command now support path filtering.
+  - Tweaked: `loli dig` command rename to `loli do` and change the API. help user working on special file or directory easily.
+  - Tweaked: `loli fix` command rename to `loli check`. And `fix` section in settings also move to `check` section too.
   - Added: Bash completion support. Try it with `do` command!
-  - Added: `config` command which can help user access those config settings.
-  - Added: `init` command which can help user create a new loli project.
+  - Added: `loli config` command which can help user access those config settings.
+  - Added: `loli init` command which can help user create a new loli project.
+  - Added: `loli serve` command which can startup a build-in mini web server and render markdown to html. (use commonmark spec.)
 
 ## Version 1.3.0
 

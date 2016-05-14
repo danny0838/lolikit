@@ -84,4 +84,9 @@ DEFAULT_CONFIG = OD((
         # ^ one of 'windows', 'mac', 'posix'
         # default == current system mode
         ))),
+    ('serve', OD((
+        ('port', '10204'),
+        ('allow_remote_access', 'no'),
+        ('debug', 'no'),
+        ))),
     ))

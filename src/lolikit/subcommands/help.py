@@ -281,6 +281,40 @@ class HelpCommand(command.Command):
 
             - default: "{default[check][newline_mode]}"
             - current: "{current[check][newline_mode]}"
+
+
+            -----------------------------------------------------------------
+
+
+            ### [serve] section ###
+
+            Control lolinote server behavior.
+
+            #### port ####
+
+            Which port should be used? The value must a positive integer.
+
+            example:
+                8080
+
+            - default: {default[serve][port]}
+            - current: {current[serve][port]}
+
+            #### allow_remote_access ####
+
+            This server can be accessed by remote users?
+            For secure reason the default value is "no".
+
+            - default: {default[serve][allow_remote_access]}
+            - current: {current[serve][allow_remote_access]}
+
+            #### debug ####
+
+            Server should expose the error messages to browser?
+            For secure reason the default value is "no".
+
+            - default: {default[serve][debug]}
+            - current: {current[serve][debug]}
             """).format(
             default=defaultconfig.DEFAULT_CONFIG, current=self.config)
         print(message)

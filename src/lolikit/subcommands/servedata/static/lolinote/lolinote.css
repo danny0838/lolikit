@@ -1,0 +1,25 @@
+pre.lolinote-content {
+    white-space: pre-wrap;
+}
+
+.lolinote-content img {
+    max-width: 100%;
+}
+
+.lolinote-dir-content a.list-group-item.disabled {
+    cursor: pointer;
+}
+
+.lolinote-content {
+    text-align: justify;
+}
+
+.lolinote-content em {
+    /* -webkit-text-emphasis: open triangle; */
+    font-style: normal;
+    border-bottom: dashed 1px rgba(128, 128, 128, 0.5);
+}
+
+.lolinote-content iframe {
+    max-width: 100% !important;
+}
