@@ -131,7 +131,7 @@ def get_default_opener():
     elif sys.platform.startswith('darwin'):
         return 'open'
     elif sys.platform.startswith('win'):
-        return 'start'
+        return 'cmd /c \'{path}\''
 
 
 @functools.lru_cache(maxsize=None)
