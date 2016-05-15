@@ -28,6 +28,8 @@ import argparse
 import functools
 import mimetypes
 import pathlib
+import datetime as DT
+import logging
 
 import bottle
 import mako.lookup as ML
@@ -69,6 +71,7 @@ class ServeCommand(command.Command):
             help='show more debug messages in browser.')
 
     def run(self, args):
+        self.require_rootdir()
         webapp = WebApp(loliconf=self.config, cmd=self)
         port = args.port or self.config[self.get_name()]['port']
         if args.remote or self.config[
@@ -96,6 +99,35 @@ def mroute(path, method='GET'):
 
 class WebApp:
     def __init__(self, loliconf, cmd):
+        def log_to_logger(fn):
+            logger = logging.getLogger('loliserve')
+
+            log_dirpath = cmd.rootdir / '.loli' / 'lolikit'
+            if not log_dirpath.exists():
+                log_dirpath.mkdir(parents=True)
+            log_filepath = log_dirpath / 'serve.log'
+
+            logger.setLevel(logging.INFO)
+            file_handler = logging.FileHandler(str(log_filepath))
+            formatter = logging.Formatter('%(msg)s')
+            file_handler.setLevel(logging.DEBUG)
+            file_handler.setFormatter(formatter)
+            logger.addHandler(file_handler)
+
+            @functools.wraps(fn)
+            def _log_to_logger(*args, **kwargs):
+                request_time = DT.datetime.now()
+                actual_response = fn(*args, **kwargs)
+                logger.info(
+                    '{addr} - - [{time}] - {method} {status} {req_url}'.format(
+                        addr=bottle.request.remote_addr,
+                        time=request_time,
+                        method=bottle.request.method,
+                        status=bottle.response.status,
+                        req_url=bottle.request.url))
+                return actual_response
+            return _log_to_logger
+
         def route_init(webapp, bottleapp):
             for kw in dir(webapp):
                 attr = getattr(webapp, kw)
@@ -111,6 +143,7 @@ class WebApp:
                 return '404 Not Found'
 
         self.bottleapp = bottle.Bottle()
+        self.bottleapp.install(log_to_logger)
         route_init(self, self.bottleapp)
         error_handle(self.bottleapp)
 
