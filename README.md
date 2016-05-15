@@ -1,52 +1,10 @@
 # Lolikit
 
-Lolinote - Lonote Lite Note-taking Rule set - is a project which defined a pure-text note-taking framework.
+**Lolikit** is a command line toolkit for Lolinote project. Which is a lightweigth, extremely flexible and no secret personal note-taking ruleset. [Check here](https://bitbucket.org/civalin/lolinote/wiki) for more detail about lolinote project.
 
-It's not like other note-taking system combine all functions into one or few software, Loli try to keepup some basic, easy and reasonable tool-free roles. Let user can use any tools to write, read, share, convert, sync and version control their notes.
-
-If you following the Loli's roles, The `lolikit` is a toolkit for you.
+If you follow the Loli's roles, The `lolikit` provide some nice tools can work with Loli more comfortable.
 
 Acturally, Loli is small and cute.
-
-
-
-## Where can I find the detail of Loli project?
-
-[See Here](https://bitbucket.org/civalin/lolinote/wiki)
-
-
-
-## What's the lolikit do?
-
-Lolikit is a command line supporting toolkit for Loli project, but not a **requirement**. This toolkit provide some good thing let user can work with Loli more comfortable.
-
-Currently the lolikit include the following sub-command...
-
-  - do    - run some executable on a path which based on current project's root directory.
-  - find  - find some notes which contain some special pattern
-  - list  - lists some notes that have recently be changed
-  - show  - show current project status.
-  - check - point out & help to fix the loli project defect. such like...
-    - file encoding
-    - check the newline format
-    - avoid danger character in filename
-    - remove empty directory.
-    - resourced note directory rename.
-  - serve - startup a mini server to render your notes.
-
-
-
-## What's the lolikit **wan't** to do?
-
-Everything which other general tools can suffice better, and / or not really often need. Such like...
-
-  - file browsing
-  - edit
-  - backup
-  - version control
-  - sync
-  - search by filename
-  - rename a filename
 
 
 
@@ -64,15 +22,64 @@ windows:
 
 
 
-# How to use?
+# How to Use?
 
-Change current working directory into you Loli project folder (or sub-folder). Then type command like... 
+This is some examples:
 
-    loli --help
-    loli find <keyword>
-    loli list
-    loli check
-    ...
+```sh
+# first, read the Loli's rules...
+
+loli help rules
+
+
+# initialize your project (if not exists)...
+
+mkdir notes
+cd notes
+loli init
+
+
+# create / view / edit / move / copy / sync / backup your notes in the project folder...
+# Hint: you can use any tools to do anything you want
+
+touch math.md
+retext math.md
+vim video-games-review.md
+
+
+# try to use lolikit for daily work...
+
+loli show                       # show current project's info.
+
+loli find eric                  # fulltext search -> keyword: "eric"
+loli find "192\.168\.\d+\.\d+"  # fulltext search -> a IPv4 match 192.168.*.*
+
+loli list                       # show a notes list sorted by modified time
+
+loli serve                      # startup a mini web server. let your project and data working like a web site
+
+loli config                     # check current configuration
+loli config -u                  # open / edit user level config file. (create if not exists)
+loli config -p                  # open / edit project level config file. (create if not exists)
+
+loli check                      # find any defect in your project, and (if you want) try to fix it.
+```
+
+
+
+# FAQ
+
+## utf8 with BOM?
+
+Currently lolikit just simple ignore the BOM. But I highly recommended DO NOT contain BOM in your note files.
+
+
+
+## What's the newline format should I use?
+
+Lolikit believe you should use **only one** kind of newline format (one of `\n`, `\r`, `\r\n`) in your project. But you can decided which one you want.
+
+You can run `loli check` to check inconsistent of the newline characters.
 
 
 
@@ -82,67 +89,53 @@ MIT LICENSE
 
 
 
-# FAQ
-
-## utf8 with BOM?
-
-Currently the lolikit's implement just sample ignore the BOM. But I highly recommended DO NOT contain BOM in your note files.
-
-
-
-## What's the newline format?
-
-Lolikit believe you should use only one kind of newline format (one of `\n`, `\r`, `\r\n`) in your project. But you can decided which one you want. See `loli help --config`
-
-You can run `loli fix` to check inconsistent of the newline format.
-
-
-
 # Changelog
 
 ## Version 1.4.0
 
-  - Fixed: a lot of bugs work with windows platform.
-  - Fixed: `loli show` cause zero division when current project folder is empty.
-  - Tweaked: `loli dig` rename to `loli do` and change the API. Make user working on special file or directory easily.
-  - Tweaked: `loli fix` rename to `loli check`. And the `fix` section in configure files also move to `check` section too.
-  - Enhanced: beautify `loli show` result.
-  - Enhanced: `loli find` now support path filtering.
-  - Added: Bash completion support. Try it with `do` command!
-  - Added: `loli config` help user to access their's configure easily.
-  - Added: `loli init` help user to create a new loli project.
-  - Added: `loli serve` command can startup a build-in mini web server and render markdown to html. (use commonmark spec.)
+- Fixed: a lot of bugs work with windows platform.
+- Fixed: `loli show` cause zero division when current project folder is empty.
+- Tweaked: `loli dig` rename to `loli do` and change the API. Make user working on special file or directory easily.
+- Tweaked: `loli fix` rename to `loli check`. And the `fix` section in configure files also move to `check` section too.
+- Enhanced: beautify `loli show` result.
+- Enhanced: `loli find` now support path filtering.
+- Added: Bash completion support. Try it with `do` command!
+- Added: `loli config` help user to access their's configure easily.
+- Added: `loli init` help user to create a new loli project.
+- Added: `loli serve` command can startup a build-in mini web server and render markdown to html. (use commonmark spec.)
+    - Fully support text-based web browser. (e.g., [w3m](http://w3m.sourceforge.net/))
 
 ## Version 1.3.0
 
 This version change a lot of configure variables. Check `loli help config` if your `lolikitrc` are not work.
 
-  - Enhanced: user can assign a `default_project` in `user` section in your **USER-LEVEL lolikitrc** file. This project will be used automatically when current working directory are not within any loli project folder.
-  - Enhanced: note-selector now display a special icon `+` for resourced md.
-  - Enhanced: note-selector UI now have `reverse` and `show` commands to reverse display and show current page.
-  - Enhanced: note-selector can access "resources" of resourced md directly by `<number>.` command format.
-  - Added: `show` command to show current project stats.
-  - Added: `dig` command to open the current project's root directory.
-  - Tweaked: change `help` command interface and write more doc in here.
-  - Tweaked: change a lot of config variables names.
+- Enhanced: user can assign a `default_project` in `user` section in your **USER-LEVEL lolikitrc** file.
+    - This project will be used automatically when current working directory are not within any loli project folder.
+- Enhanced: note-selector now display a special icon `+` for resourced md.
+- Enhanced: note-selector UI now have `reverse` and `show` commands to reverse display and show current page.
+- Enhanced: note-selector can access "resources" of resourced md directly by `<number>.` command format.
+- Added: `show` command to show current project stats.
+- Added: `dig` command to open the current project's root directory.
+- Tweaked: change `help` command interface and write more doc in here.
+- Tweaked: change a lot of config variables names.
 
 ## Version 1.2.2
 
-  - Removed: `-s` options in `find` and `list` commands.
-  - Fixed: `prev` command in note selector are mulfunction.
+- Removed: `-s` options in `find` and `list` commands.
+- Fixed: `prev` command in note selector are mulfunction.
 
 ## Version 1.2.1
 
-  - Fixed: error when assign a opener in note selector UI.
+- Fixed: error when assign a opener in note selector UI.
 
 ## Version 1.2
 
-  - Refactor: re-write the note selector for scalability and change the UI command.
-  - Changed: option `editor_command` now change to `editor`.
-  - Enhanced: note selector can open a file browser in special note parent folder now.
-  - Enhanced: now `loli` can be executed when current working direcotry not in a loli project.
-  - Enhanced: note selector can assign a executable as opener in runtime.
+- Refactor: re-write the note selector for scalability and change the UI command.
+- Changed: option `editor_command` now change to `editor`.
+- Enhanced: note selector can open a file browser in special note parent folder now.
+- Enhanced: now `loli` can be executed when current working direcotry not in a loli project.
+- Enhanced: note selector can assign a executable as opener in runtime.
 
 ## Version 1.1
 
-  - Accroding the rules version 2015-15-17, slight change the resourced notes detecting algorithm.
+- Accroding the rules version 2015-15-17, slight change the resourced notes detecting algorithm.
