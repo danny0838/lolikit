@@ -14,8 +14,10 @@
           icon = '<span class="glyphicon glyphicon-file"></span>'
       %>
       <a href="${dir_content_data['prepend_url']}${baseon_rootdir}${dirmark}" class="list-group-item ${a_color_class}">
+        <span class="sr-only"><b>${'{:\u00A0>2}'.format(loop.index + 1)}. </b></span>
         ${icon}
         ${name}${dirmark}
+        <span class="sr-only"><br/></span>
       </a>
     % endfor
   </div>
