@@ -88,7 +88,6 @@ class ServeCommand(command.Command):
 
 
 def mroute(path, method='GET'):
-    @functools.wraps(path, method)
     def decorator(func):
         func.route = {}
         func.route['path'] = path
@@ -99,7 +98,7 @@ def mroute(path, method='GET'):
 
 class WebApp:
     def __init__(self, loliconf, cmd):
-        def log_to_logger(fn):
+        def get_logger():
             logger = logging.getLogger('loliserve')
 
             log_dirpath = cmd.rootdir / '.loli' / 'lolikit'
@@ -113,20 +112,25 @@ class WebApp:
             file_handler.setLevel(logging.DEBUG)
             file_handler.setFormatter(formatter)
             logger.addHandler(file_handler)
+            return logger
 
-            @functools.wraps(fn)
-            def _log_to_logger(*args, **kwargs):
-                request_time = DT.datetime.now()
-                actual_response = fn(*args, **kwargs)
-                logger.info(
-                    '{addr} - - [{time}] - {method} {status} {req_url}'.format(
-                        addr=bottle.request.remote_addr,
-                        time=request_time,
-                        method=bottle.request.method,
-                        status=bottle.response.status,
-                        req_url=bottle.request.url))
-                return actual_response
-            return _log_to_logger
+        def get_log_to_logger(logger):
+            def log_to_logger(fn):
+                @functools.wraps(fn)
+                def _log_to_logger(*args, **kwargs):
+                    request_time = DT.datetime.now()
+                    actual_response = fn(*args, **kwargs)
+                    logger.info(
+                        ('{addr} - - [{time}]'
+                         ' - {method} {status} {req_url}').format(
+                            addr=bottle.request.remote_addr,
+                            time=request_time,
+                            method=bottle.request.method,
+                            status=actual_response.status,
+                            req_url=bottle.request.url))
+                    return actual_response
+                return _log_to_logger
+            return log_to_logger
 
         def route_init(webapp, bottleapp):
             for kw in dir(webapp):
@@ -143,7 +147,8 @@ class WebApp:
                 return '404 Not Found'
 
         self.bottleapp = bottle.Bottle()
-        self.bottleapp.install(log_to_logger)
+        self._logger = get_logger()
+        self.bottleapp.install(get_log_to_logger(self._logger))
         route_init(self, self.bottleapp)
         error_handle(self.bottleapp)
 
@@ -287,19 +292,23 @@ class WebApp:
 
     @mroute('/source/', 'GET')
     def source_root(self):
-        return self.__get_mix_result('', prepend_url='/source/')
+        return bottle.HTTPResonse(
+            self.__get_mix_result('', prepend_url='/source/'))
 
     @mroute('/source/<path:path>', 'GET')
     def source(self, path):
-        return self.__get_mix_result(path, prepend_url='/source/')
+        return bottle.HTTPResponse(
+            self.__get_mix_result(path, prepend_url='/source/'))
 
     @mroute('/note/', 'GET')
     def note_root(self):
-        return self.__get_mix_result('', prepend_url='/note/')
+        return bottle.HTTPResponse(
+            self.__get_mix_result('', prepend_url='/note/'))
 
     @mroute('/note/<path:path>', 'GET')
     def note(self, path):
-        return self.__get_mix_result(path, prepend_url='/note/')
+        return bottle.HTTPResponse(
+            self.__get_mix_result(path, prepend_url='/note/'))
 
     @mroute('/', 'GET')
     def index(self):
