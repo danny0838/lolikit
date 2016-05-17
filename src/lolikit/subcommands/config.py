@@ -28,10 +28,15 @@ import argparse
 import io
 import subprocess
 import configparser
+import sys
 
 from .. import command
 from .. import utils
 from .. import defaultconfig
+
+
+class ConfigError(Exception):
+    pass
 
 
 class ConfigCommand(command.Command):
@@ -67,6 +72,11 @@ class ConfigCommand(command.Command):
                  'The current working directory must under a loli project,\n'
                  'or "user.default_project" must a valid value')
 
+        exgroup.add_argument(
+            '-c', '--check-config', dest="check_config",
+            action='store_true',
+            help='check any defect in current config files')
+
     def run(self, args):
         def edit(path):
             opener = args.editor or self.config['selector']['editor']
@@ -95,6 +105,8 @@ class ConfigCommand(command.Command):
             path = utils.get_project_lolikitrc_path(self.rootdir)
             write_config_if_not_exists(path, ['user'])
             edit(path)
+        elif args.check_config:
+            self.__check_config()
         else:
             self.__print_current_config()
 
@@ -118,3 +130,28 @@ class ConfigCommand(command.Command):
 
     def __print_current_config(self):
         print(self.__get_self_config_str())
+
+    def __check_config(self):
+        def check_check_newline_mode(config):
+            valid_newline_mode = ('posix', 'windows', 'mac')
+            if config['check']['newline_mode'] not in valid_newline_mode:
+                raise ConfigError(
+                    '[CONFIGERROR] "fix:newline_mode" must one of {}'
+                    .format(valid_newline_mode))
+
+        def check_serve_users(config):
+            if config['serve']['users'] == '':
+                return
+            else:
+                for up in config['serve']['users'].split('\n'):
+                    if not (':' in up):
+                        raise ConfigError(
+                            '[CONFIGERROR] "serve:users" must contain ":"'
+                            ' in each line.')
+
+        try:
+            check_check_newline_mode(self.config)
+            check_serve_users(self.config)
+        except ConfigError as e:
+            print(e)
+            sys.exit(1)

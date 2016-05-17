@@ -315,6 +315,15 @@ class HelpCommand(command.Command):
 
             - default: {default[serve][debug]}
             - current: {current[serve][debug]}
+
+            #### users ####
+
+            A multi-value field. Each line should contain a string look like
+            "username:passname". If not set any user & password, server will
+            turn off all user checking mechanism.
+
+            - default: {default[serve][users]}
+            - current: {current[serve][users]}
             """).format(
             default=defaultconfig.DEFAULT_CONFIG, current=self.config)
         print(message)

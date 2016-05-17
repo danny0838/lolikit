@@ -88,11 +88,37 @@ class ServeCommand(command.Command):
 
 
 def mroute(path, method='GET'):
+    """"use: @mroute('xx', 'GET')"""
     def decorator(func):
         func.route = {}
         func.route['path'] = path
         func.route['method'] = method
         return func
+    return decorator
+
+
+def mauth(method):
+    """use: @mauth"""
+    def decorator(self, *args, **kwargs):
+        def pass_checker(username, password):
+            cfg_users = self._cmd.config['serve']['users']
+            if cfg_users == '':
+                return True
+            else:
+                for up in cfg_users.split('\n'):
+                    u, p = up.split(':')
+                    if u == username:
+                        if p == password:
+                            return True
+                return False
+
+        @functools.wraps(method)
+        @bottle.auth_basic(pass_checker)
+        def wrapper(*args, **kwargs):
+            return method(*args, **kwargs)
+
+        return wrapper(self, *args, **kwargs)
+
     return decorator
 
 
@@ -286,30 +312,36 @@ class WebApp:
                     mimetype=mimetypes.guess_type(filepath.name)[0])
 
     @mroute('/static/<path:path>', 'GET')
+    @mauth
     def static(self, path):
         return bottle.static_file(path, root=str(self._staticdir),
                                   mimetype=mimetypes.guess_type(path)[0])
 
     @mroute('/source/', 'GET')
+    @mauth
     def source_root(self):
         return bottle.HTTPResonse(
             self.__get_mix_result('', prepend_url='/source/'))
 
     @mroute('/source/<path:path>', 'GET')
+    @mauth
     def source(self, path):
         return bottle.HTTPResponse(
             self.__get_mix_result(path, prepend_url='/source/'))
 
     @mroute('/note/', 'GET')
+    @mauth
     def note_root(self):
         return bottle.HTTPResponse(
             self.__get_mix_result('', prepend_url='/note/'))
 
     @mroute('/note/<path:path>', 'GET')
+    @mauth
     def note(self, path):
         return bottle.HTTPResponse(
             self.__get_mix_result(path, prepend_url='/note/'))
 
     @mroute('/', 'GET')
+    @mauth
     def index(self):
         return bottle.redirect('/note/')

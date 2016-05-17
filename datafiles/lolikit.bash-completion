@@ -40,7 +40,7 @@ _lolikit_bash_completion()
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     elif [[ ${subcommand} == config ]] ; then
-        opts="--user-settings --project-settings"
+        opts="--user-settings --project-settings --check-config"
         COMPREPLY=( $(compgen -W "${opts}" -A command -- ${cur}) )
 
     elif [[ ${subcommand} == do ]] ; then

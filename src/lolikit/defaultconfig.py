@@ -88,5 +88,6 @@ DEFAULT_CONFIG = OD((
         ('port', '10204'),
         ('allow_remote_access', 'no'),
         ('debug', 'no'),
+        ('users', ''),
         ))),
     ))

@@ -36,10 +36,6 @@ import shlex
 from . import defaultconfig
 
 
-class ConfigError(Exception):
-    pass
-
-
 def get_user_lolikitrc_path():
     user_lolikitrc = pathlib.Path(
         os.path.expanduser('~')) / '.lolikitrc'
@@ -69,20 +65,8 @@ def get_config(rootdir=None):
             '\n^\.loli($|' + ('\\\\' if os.sep == '\\' else os.sep) + ')')
         return config
 
-    def check_config(config):
-        valid_newline_mode = ('posix', 'windows', 'mac')
-        if config['check']['newline_mode'] not in valid_newline_mode:
-            raise ConfigError(
-                '[CONFIGERROR] "fix:newline_mode" must one of {}'
-                .format(valid_newline_mode))
-
     config = read_config(rootdir)
     config = expand_config(config)
-    try:
-        check_config(config)
-    except ConfigError as e:
-        print(e)
-        sys.exit(1)
     return config
 
 
