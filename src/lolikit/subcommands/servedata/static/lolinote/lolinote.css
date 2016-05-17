@@ -17,7 +17,7 @@ pre.lolinote-content {
 .lolinote-content em {
     /* -webkit-text-emphasis: open triangle; */
     font-style: normal;
-    border-bottom: dashed 1px rgba(128, 128, 128, 0.5);
+    border-bottom: dashed 1px rgba(64, 64, 64, 0.5);
 }
 
 .lolinote-content iframe {
