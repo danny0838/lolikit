@@ -68,14 +68,14 @@ class ConfigCommand(command.Command):
         exgroup.add_argument(
             '-p', '--project-settings', dest="project_settings",
             action='store_true',
-            help='open project\'s lolikitrc.\n'
-                 'The current working directory must under a loli project,\n'
-                 'or "user.default_project" must a valid value')
+            help='open project\'s lolikitrc')
 
         exgroup.add_argument(
             '-c', '--check-config', dest="check_config",
             action='store_true',
-            help='check any defect in current config files')
+            help='check any defect in current configuration.\n'
+                 'if find any errors, you should fix it ASAP\n'
+                 'or some subsystem may malfunction.')
 
     def run(self, args):
         def edit(path):
@@ -152,6 +152,7 @@ class ConfigCommand(command.Command):
         try:
             check_check_newline_mode(self.config)
             check_serve_users(self.config)
+            print('Your configuration are looking good.')
         except ConfigError as e:
             print(e)
             sys.exit(1)
