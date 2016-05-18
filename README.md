@@ -99,11 +99,13 @@ MIT LICENSE
 - Tweaked: `loli fix` rename to `loli check`. And the `fix` section in configure files also move to `check` section too.
 - Enhanced: beautify `loli show` result.
 - Enhanced: `loli find` now support path filtering.
-- Added: Bash completion support. Try it with `do` command!
+- Added: Bash completion support.
 - Added: `loli config` help user to access their's configure easily.
 - Added: `loli init` help user to create a new loli project.
 - Added: `loli serve` command can startup a build-in mini web server and render markdown to html. (use commonmark spec.)
     - Fully support text-based web browser. (e.g., [w3m](http://w3m.sourceforge.net/))
+
+
 
 ## Version 1.3.0
 
@@ -119,14 +121,20 @@ This version change a lot of configure variables. Check `loli help config` if yo
 - Tweaked: change `help` command interface and write more doc in here.
 - Tweaked: change a lot of config variables names.
 
+
+
 ## Version 1.2.2
 
 - Removed: `-s` options in `find` and `list` commands.
 - Fixed: `prev` command in note selector are mulfunction.
 
+
+
 ## Version 1.2.1
 
 - Fixed: error when assign a opener in note selector UI.
+
+
 
 ## Version 1.2
 
@@ -135,6 +143,8 @@ This version change a lot of configure variables. Check `loli help config` if yo
 - Enhanced: note selector can open a file browser in special note parent folder now.
 - Enhanced: now `loli` can be executed when current working direcotry not in a loli project.
 - Enhanced: note selector can assign a executable as opener in runtime.
+
+
 
 ## Version 1.1
 
