@@ -89,6 +89,8 @@ class HelpCommand(command.Command):
         message = textwrap.dedent("""\
             # Lolikit Configuration #
 
+
+
             ## Basic ##
 
             Lolikit have 3 level settings files.
@@ -128,10 +130,14 @@ class HelpCommand(command.Command):
 
             ## Variables ##
 
+
+
             ### [user] section ###
 
             Variables in `user` section can only meaningful within the
             "user configure file" & cannot put in to project configure file.
+
+
 
             #### default_project ####
 
@@ -145,8 +151,7 @@ class HelpCommand(command.Command):
             example:
                 ~/.notes
 
-            - default: "{default[user][default_project]}"
-            - current: "{current[user][default_project]}"
+            (default: "{default[user][default_project]}")
 
 
             -----------------------------------------------------------------
@@ -157,6 +162,8 @@ class HelpCommand(command.Command):
             Variables in `project` section can only meaningful within the
             "project configure file".
 
+
+
             #### ignore_patterns ####
 
             Determine which path will be ignore by lolikit in current project.
@@ -165,8 +172,7 @@ class HelpCommand(command.Command):
             PS: The "^.loli" pattern will be appended automatically and cannot
             be removed.
 
-            - default: {default[project][ignore_patterns]}
-            - current: {current[project][ignore_patterns]}
+            (default: {default[project][ignore_patterns]})
 
 
             -----------------------------------------------------------------
@@ -175,6 +181,8 @@ class HelpCommand(command.Command):
             ### [selector] section ###
 
             Control default selector behavior.
+
+
 
             #### editor ####
 
@@ -185,8 +193,9 @@ class HelpCommand(command.Command):
                 vim
                 gedit "{{path}}"
 
-            - default: "{default[selector][editor]}"
-            - current: "{current[selector][editor]}"
+            (default: "{default[selector][editor]}")
+
+
 
             #### file_browser ####
 
@@ -197,38 +206,41 @@ class HelpCommand(command.Command):
                 nautilus
                 ranger "{{path}}"
 
-            - default: "{default[selector][file_browser]}"
-            - current: "{current[selector][file_browser]}"
+            (default: "{default[selector][file_browser]}")
+
+
 
             #### reverse ####
 
             Some lolikit command will show a list of notes. This setting
             define the list should be reversed or not.
 
-            - default: {default[selector][reverse]}
-            - current: {current[selector][reverse]}
+            (default: {default[selector][reverse]})
+
+
 
             #### page_size ####
 
             Some lolikit command will show a list of notes. This setting
             define how much notes in one page.
 
-            - default: {default[selector][page_size]}
-            - current: {current[selector][page_size]}
+            (default: {default[selector][page_size]})
+
+
 
             #### find_format ####
 
             Define the output format with "find" command.
 
-            - default: "{default[selector][find_format]}"
-            - current: "{current[selector][find_format]}"
+            (default: "{default[selector][find_format]}")
+
+
 
             #### list_format ####
 
             Define the output format with "list" command.
 
-            - default: "{default[selector][list_format]}"
-            - current: "{current[selector][list_format]}"
+            (default: "{default[selector][list_format]}")
 
 
             -----------------------------------------------------------------
@@ -255,20 +267,24 @@ class HelpCommand(command.Command):
 
             ### [check] section ###
 
+
+
             #### danger_pathname_chars ####
 
             Define what chars is danger in pathname.
 
-            - default: "{default[check][danger_pathname_chars]}"
-            - current: "{current[check][danger_pathname_chars]}"
+            (default: "{default[check][danger_pathname_chars]}")
+
+
 
             #### danger_pathname_chars_fix_to ####
 
             Set which char will be used to replace the danger chars when
             fixing.
 
-            - default: "{default[check][danger_pathname_chars_fix_to]}"
-            - current: "{current[check][danger_pathname_chars_fix_to]}"
+            (default: "{default[check][danger_pathname_chars_fix_to]}")
+
+
 
             #### newline_mode ####
 
@@ -279,8 +295,7 @@ class HelpCommand(command.Command):
                 - windows
                 - mac
 
-            - default: "{default[check][newline_mode]}"
-            - current: "{current[check][newline_mode]}"
+            (default: "{default[check][newline_mode]}")
 
 
             -----------------------------------------------------------------
@@ -290,6 +305,8 @@ class HelpCommand(command.Command):
 
             Control lolinote server behavior.
 
+
+
             #### port ####
 
             Which port should be used? The value must a positive integer.
@@ -297,24 +314,27 @@ class HelpCommand(command.Command):
             example:
                 8080
 
-            - default: {default[serve][port]}
-            - current: {current[serve][port]}
+            (default: {default[serve][port]})
+
+
 
             #### allow_remote_access ####
 
             This server can be accessed by remote users?
             For secure reason the default value is "no".
 
-            - default: {default[serve][allow_remote_access]}
-            - current: {current[serve][allow_remote_access]}
+            (default: {default[serve][allow_remote_access]})
+
+
 
             #### debug ####
 
             Server should expose the error messages to browser?
             For secure reason the default value is "no".
 
-            - default: {default[serve][debug]}
-            - current: {current[serve][debug]}
+            (default: {default[serve][debug]})
+
+
 
             #### users ####
 
@@ -322,10 +342,22 @@ class HelpCommand(command.Command):
             "username:passname". If not set any user & password, server will
             turn off all user checking mechanism.
 
-            - default: {default[serve][users]}
-            - current: {current[serve][users]}
+            (default: {default[serve][users]})
+
+
+
+            #### ssl_cert_file ####
+
+            A certification file path. If this value not blank then https
+            protocal will be used for the default web browser.
+
+            For test purpose, user can create a self-signed cert file by...
+
+            openssl req -new -x509 -keyout loliserver.pem -out loliserver.pem -days 365 -nodes
+
+            (default: {default[serve][users]})
             """).format(
-            default=defaultconfig.DEFAULT_CONFIG, current=self.config)
+            default=defaultconfig.DEFAULT_CONFIG)
         print(message)
 
     def show_selector(self):

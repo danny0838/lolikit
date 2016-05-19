@@ -51,7 +51,7 @@ class ServeCommand(command.Command):
             formatter_class=argparse.RawTextHelpFormatter,
             help='start a web server allow to remote access',
             description=(
-                'start a web server allow to remote access'
+                'start a web server allow webbrowser access'
                 ' current lolinote project.\n\n'
                 'The following options will overwrite the current config'
                 ' settings.\n'
@@ -70,9 +70,15 @@ class ServeCommand(command.Command):
             '-d', '--debug', dest='debug', action='store_true',
             help='show more debug messages in browser.')
 
+        parser.add_argument(
+            '-s', '--ssl-cert-file', dest='ssl_cert_file',
+            default=self.config[self.get_name()]['ssl_cert_file'],
+            help='give a ssl certification to enable the ssl encrypt')
+
     def run(self, args):
         self.require_rootdir()
         webapp = WebApp(loliconf=self.config, cmd=self)
+
         port = args.port or self.config[self.get_name()]['port']
         if args.remote or self.config[
                 self.get_name()].getboolean('allow_remote_access'):
@@ -80,11 +86,45 @@ class ServeCommand(command.Command):
         else:
             host = '127.0.0.1'
         debug = args.debug or self.config[self.get_name()].getboolean('debug')
+
+        if args.ssl_cert_file:
+            class SSLWSGIRefServer(bottle.ServerAdapter):
+                def run(self, handler):
+                    import wsgiref.simple_server
+                    import ssl
+                    if self.quiet:
+                        class QuietHandler(
+                                wsgiref.simple_server.WSGIRequestHandler):
+                            def log_request(*args, **kw): pass
+                        self.options['handler_class'] = QuietHandler
+                    srv = wsgiref.simple_server.make_server(
+                        self.host, self.port, handler, **self.options)
+                    srv.socket = ssl.wrap_socket(
+                        srv.socket,
+                        certfile=args.ssl_cert_file,
+                        server_side=True)
+                    srv.serve_forever()
+
+            def i_am_https(app):
+                def https_app(environ, start_response):
+                    environ['wsgi.url_scheme'] = 'https'
+                    return app(environ, start_response)
+                return https_app
+
+            webapp.bottleobj.wsgi = i_am_https(webapp.bottleobj.wsgi)
+            server = SSLWSGIRefServer(host=host, port=port)
+            schema = 'https'
+        else:
+            server = bottle.WSGIRefServer(host=host, port=port)
+            schema = 'http'
+
+        print('Data folder is "{}".'.format(str(self.rootdir)))
         print('Lolinote server starting up...')
-        print('Listening on http://{host}:{port}'.format(host=host, port=port))
+        print('Listening on {schema}://{host}:{port}'.format(
+            schema=schema, host=host, port=port))
         print("Hit Ctrl-C to quit.\n")
-        bottle.run(app=webapp.bottleapp,
-                   host=host, port=port, quiet=True, debug=debug)
+        bottle.run(app=webapp.bottleobj,
+                   server=server, quiet=True, debug=debug)
 
 
 def mroute(path, method='GET'):
@@ -158,25 +198,25 @@ class WebApp:
                 return _log_to_logger
             return log_to_logger
 
-        def route_init(webapp, bottleapp):
+        def route_init(webapp, bottleobj):
             for kw in dir(webapp):
                 attr = getattr(webapp, kw)
                 if hasattr(attr, 'route') and type(attr.route) == dict:
-                    bottleapp.route(
+                    bottleobj.route(
                         attr.route['path'],
                         attr.route['method'],
                         attr)
 
-        def error_handle(bottleapp):
-            @bottleapp.error(404)
+        def error_handle(bottleobj):
+            @bottleobj.error(404)
             def error404(error):
                 return '404 Not Found'
 
-        self.bottleapp = bottle.Bottle()
+        self.bottleobj = bottle.Bottle()
         self._logger = get_logger()
-        self.bottleapp.install(get_log_to_logger(self._logger))
-        route_init(self, self.bottleapp)
-        error_handle(self.bottleapp)
+        self.bottleobj.install(get_log_to_logger(self._logger))
+        route_init(self, self.bottleobj)
+        error_handle(self.bottleobj)
 
         self._loliconf = loliconf
         self._cmd = cmd

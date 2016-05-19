@@ -89,5 +89,6 @@ DEFAULT_CONFIG = OD((
         ('allow_remote_access', 'no'),
         ('debug', 'no'),
         ('users', ''),
+        ('ssl_cert_file', ''),
         ))),
     ))

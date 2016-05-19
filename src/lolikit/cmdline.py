@@ -27,13 +27,14 @@
 import argparse
 import textwrap
 import sys
+import os
 
 from . import info
 from . import subcommandload as SCL
 from . import utils
 
 
-def build_parser(config, commands):
+def build_parser(config, commands, light_mode=False):
     def get_parser():
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter,
@@ -41,6 +42,10 @@ def build_parser(config, commands):
 
         parser.add_argument(
             '--version', action='version', version=info.VERSION)
+
+        parser.add_argument(
+            '--cwd', dest='cwd',
+            help='change current working directory')
 
         parser.add_argument(
             '--get-root', dest='get_root', action='store_true',
@@ -63,8 +68,9 @@ def build_parser(config, commands):
             cmd.register_parser(subparsers)
 
     parser = get_parser()
-    subparsers = get_subparsers(parser)
-    register_subcommands(subparsers, commands)
+    if not light_mode:
+        subparsers = get_subparsers(parser)
+        register_subcommands(subparsers, commands)
     return parser
 
 
@@ -79,15 +85,24 @@ def process(args, commands, rootdir):
 
 
 def main():
-    utils.register_signal_handler()
-    no_rootdir_config = utils.get_config(None)
-    rootdir = utils.get_rootdir(no_rootdir_config)
-    config = utils.get_config(rootdir)
-    commands = SCL.get_commands_list(config, rootdir)
+    def generate_init_obj(cwd):
+        os.chdir(cwd)
+        no_rootdir_config = utils.get_config(None)
+        rootdir = utils.get_rootdir(no_rootdir_config)
+        config = utils.get_config(rootdir)
+        commands = SCL.get_commands_list(config, rootdir)
 
-    parser = build_parser(config, commands)
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
-    args = parser.parse_args()
+        parser = build_parser(config, commands)
+        if len(sys.argv) == 1:
+            parser.print_help()
+            sys.exit(1)
+        args = parser.parse_args()
+        return args, commands, rootdir
+
+    utils.register_signal_handler()
+    args, commands, rootdir = generate_init_obj(os.getcwd())
+
+    if args.cwd and args.cwd != os.getcwd():
+        args, commands, rootdir = generate_init_obj(args.cwd)
+
     return process(args, commands, rootdir)

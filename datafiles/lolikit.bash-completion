@@ -41,7 +41,7 @@ _lolikit_bash_completion()
 
     elif [[ ${subcommand} == config ]] ; then
         opts="--user-settings --project-settings --check-config"
-        COMPREPLY=( $(compgen -W "${opts}" -A command -- ${cur}) )
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     elif [[ ${subcommand} == do ]] ; then
         if [[ ${prev} == '-x' || ${prev} == '--executable' ]] ; then
@@ -73,8 +73,10 @@ _lolikit_bash_completion()
         if [[ ${prev} == '-p' || ${prev} == '--port' ]] ; then
             opts=""
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        elif [[ ${prev} == '-s' || ${prev} == '--ssl-cert-file' ]] ; then
+            COMPREPLY=( $(compgen -f -d -- ${cur}) )
         else
-            opts="--remote --debug --port"
+            opts="--remote --debug --port --ssl-cert-file"
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         fi
 
@@ -89,4 +91,5 @@ _lolikit_bash_completion()
     fi
     return 0
 }
+
 complete -F _lolikit_bash_completion loli
