@@ -79,27 +79,20 @@ class Command(metaclass=abc.ABCMeta):
         '''
         pass
 
-    def filted_ignore(self, paths):
-        ignore_progs = [
-            re.compile(pattern.strip()) for pattern
-            in self.config['project']['ignore_patterns'].split('\n')
-            if pattern.strip()]
-        return [path for path in paths
-                if not any(
-                    prog.search(str(path.relative_to(self.rootdir)))
-                    for prog in ignore_progs)]
-
     def get_all_dir_paths(self):
         paths = self.rootdir.rglob('**')
-        return self.filted_ignore(paths)
+        return utils.filted_ignore(
+            paths, self.rootdir, self.config['project']['ignore_patterns'])
 
     def get_all_md_paths(self):
         paths = [p for p in self.rootdir.rglob('*.md') if p.is_file()]
-        return self.filted_ignore(paths)
+        return utils.filted_ignore(
+            paths, self.rootdir, self.config['project']['ignore_patterns'])
 
     def get_all_resourced_md_paths(self):
         paths = [p for p in self.rootdir.rglob('*.md') if utils.is_rmd(p)]
-        return self.filted_ignore(paths)
+        return utils.filted_ignore(
+            paths, self.rootdir, self.config['project']['ignore_patterns'])
 
     def require_rootdir(self):
         if self.rootdir is None:

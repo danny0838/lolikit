@@ -1,5 +1,5 @@
-recursive-include src/lolikit/subcommands/servedata *
-recursive-exclude src/lolikit/subcommands/servedata *.swp
+recursive-include src/lolikit/servedata *
+recursive-exclude src/lolikit/servedata *.swp
 include README.md
 include loli.py
 include requirements.txt

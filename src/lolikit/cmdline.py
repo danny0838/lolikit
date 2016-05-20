@@ -91,18 +91,16 @@ def main():
         rootdir = utils.get_rootdir(no_rootdir_config)
         config = utils.get_config(rootdir)
         commands = SCL.get_commands_list(config, rootdir)
-
         parser = build_parser(config, commands)
-        if len(sys.argv) == 1:
-            parser.print_help()
-            sys.exit(1)
-        args = parser.parse_args()
-        return args, commands, rootdir
+        return parser, commands, rootdir
 
     utils.register_signal_handler()
-    args, commands, rootdir = generate_init_obj(os.getcwd())
-
-    if args.cwd and args.cwd != os.getcwd():
-        args, commands, rootdir = generate_init_obj(args.cwd)
-
-    return process(args, commands, rootdir)
+    parser, commands, rootdir = generate_init_obj(os.getcwd())
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+    else:
+        args = parser.parse_args()
+        if args.cwd and args.cwd != os.getcwd():
+            args, commands, rootdir = generate_init_obj(args.cwd)
+        return process(args, commands, rootdir)

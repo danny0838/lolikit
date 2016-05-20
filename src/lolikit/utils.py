@@ -32,42 +32,9 @@ import signal
 import os.path
 import functools
 import shlex
+import re
 
 from . import defaultconfig
-
-
-def get_user_lolikitrc_path():
-    user_lolikitrc = pathlib.Path(
-        os.path.expanduser('~')) / '.lolikitrc'
-    return user_lolikitrc
-
-
-def get_project_lolikitrc_path(rootdir):
-    project_lolikitrc = rootdir / '.loli' / 'lolikitrc'
-    return project_lolikitrc
-
-
-def get_config(rootdir=None):
-    def read_config(rootdir):
-        config = configparser.ConfigParser()
-        config.read_dict(defaultconfig.DEFAULT_CONFIG)
-        user_lolikitrc = get_user_lolikitrc_path()
-        if user_lolikitrc.is_file():
-            config.read(str(user_lolikitrc))
-        if rootdir is not None:
-            project_lolikitrc = get_project_lolikitrc_path(rootdir)
-            if project_lolikitrc.is_file():
-                config.read(str(project_lolikitrc))
-        return config
-
-    def expand_config(config):
-        config['project']['ignore_patterns'] += (
-            '\n^\.loli($|' + ('\\\\' if os.sep == '\\' else os.sep) + ')')
-        return config
-
-    config = read_config(rootdir)
-    config = expand_config(config)
-    return config
 
 
 def register_signal_handler():
@@ -86,6 +53,38 @@ def get_rootdir_from_parents(current_dir):
             return get_rootdir_from_parents(current_dir.parent)
         else:
             return None
+
+
+def get_config(rootdir=None):
+    def get_user_lolikitrc_path():
+        user_lolikitrc = pathlib.Path(
+            os.path.expanduser('~')) / '.lolikitrc'
+        return user_lolikitrc
+
+    def get_project_lolikitrc_path(rootdir):
+        project_lolikitrc = rootdir / '.loli' / 'lolikitrc'
+        return project_lolikitrc
+
+    def read_config(rootdir):
+        config = configparser.ConfigParser()
+        config.read_dict(defaultconfig.DEFAULT_CONFIG)
+        user_lolikitrc = get_user_lolikitrc_path()
+        if user_lolikitrc.is_file():
+            config.read(str(user_lolikitrc))
+        if rootdir is not None:
+            project_lolikitrc = get_project_lolikitrc_path(rootdir)
+            if project_lolikitrc.is_file():
+                config.read(str(project_lolikitrc))
+        return config
+
+    def expand_config(config):
+        config['project']['ignore_patterns'] += (
+            '\n^\\.loli($|' + ('\\\\' if os.sep == '\\' else os.sep) + ')')
+        return config
+
+    config = read_config(rootdir)
+    config = expand_config(config)
+    return config
 
 
 def get_rootdir(config):
@@ -148,3 +147,14 @@ def get_opener_command(opener, path):
     else:
         command = [opener, path]
     return command
+
+
+def filted_ignore(paths, rootdir, ignore_patterns):
+    ignore_progs = [
+        re.compile(pattern.strip()) for pattern
+        in ignore_patterns.split('\n')
+        if pattern.strip()]
+    return [path for path in paths
+            if not any(
+                prog.search(str(path.relative_to(rootdir)))
+                for prog in ignore_progs)]
