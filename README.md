@@ -91,6 +91,12 @@ MIT LICENSE
 
 # Changelog
 
+## Version 1.4.2
+
+- Fixed: `loli serve` path == "/source/" not work.
+
+
+
 ## Version 1.4.1
 
 - Fixed: remove the auth check if no username and password in settings.

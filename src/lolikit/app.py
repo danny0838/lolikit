@@ -277,7 +277,7 @@ class _LoliWebLogic:
     @_mroute('/source/', 'GET')
     @_mauth
     def source_root(self):
-        return bottle.HTTPResonse(
+        return bottle.HTTPResponse(
             self.__get_mix_result('', prepend_url='/source/'))
 
     @_mroute('/source/<path:path>', 'GET')
