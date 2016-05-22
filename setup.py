@@ -27,8 +27,12 @@
 ##########################################################################
 
 import sys
+import os
 
 from setuptools import setup
+from setuptools.command.install import install as _install
+from pkg_resources import Requirement, resource_filename
+
 import src.lolikit.info as info
 
 if not sys.version_info >= (3, 4, 0):
@@ -36,12 +40,27 @@ if not sys.version_info >= (3, 4, 0):
     sys.exit(1)
 
 
-def get_data_files():
-    if sys.platform.startswith('win'):
-        return []
-    else:
-        return [
-            ('/etc/bash_completion.d/', ['datafiles/lolikit.bash-completion'])]
+def _post_install(dir):
+    if sys.platform.startswith('linux'):
+        src_path = resource_filename(
+            Requirement.parse(info.PROJECT_NAME),
+            os.path.join(info.PROJECT_NAME,
+                         "data", "completion", "lolikit.bash-completion"))
+        dst_path = os.path.join(
+            '/etc', 'bash_completion.d', 'lolikit.bash-completion')
+        if os.path.exists(dst_path):
+            os.remove(dst_path)
+            try:
+                os.symlink(src_path, dst_path)
+            except:
+                pass
+
+
+class install(_install):
+    def run(self):
+        _install.run(self)
+        self.execute(_post_install, (self.install_lib,),
+                     msg="Running post install task")
 
 setup(
     name=info.PROJECT_NAME,
@@ -65,10 +84,10 @@ setup(
     package_dir={'': 'src'},
     packages=['lolikit', 'lolikit.subcommands'],
     include_package_data=True,
-    data_files=get_data_files(),
     entry_points={
         'console_scripts': ['loli = lolikit.cmdline:main'],
         'setuptools.installation': ['eggsecutable = lolikit.cmdline:main']
         },
     keywords='notes-manager',
+    cmdclass={'install': install},
 )

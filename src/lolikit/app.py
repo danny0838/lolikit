@@ -138,10 +138,11 @@ class _LoliWebLogic:
 
         self._mako_lookup = ML.TemplateLookup(
             directories=[
-                str(pathlib.Path(__file__).parent / 'servedata' / 'mako')],
+                str(pathlib.Path(__file__).parent /
+                    'data' / 'serve' / 'mako')],
             input_encoding='utf-8')
         self._staticdir = pathlib.Path(
-            __file__).parent / 'servedata' / 'static'
+            __file__).parent / 'data' / 'serve' / 'static'
 
     def __check_ignore_filepath(self, filepath):
         if len(utils.filted_ignore(

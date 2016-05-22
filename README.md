@@ -94,6 +94,7 @@ MIT LICENSE
 ## Version 1.4.2
 
 - Fixed: `loli serve` path == "/source/" not work.
+- Fixed: pip distribution not work with data_files (bash-completion).
 
 
 
