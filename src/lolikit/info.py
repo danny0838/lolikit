@@ -24,7 +24,7 @@
 ##########################################################################
 
 
-VERSION = '1.4.2'
+VERSION = '1.4.3'
 DESCRIPTION = 'Lolinote supporting toolkit'
 LICENSE = 'MIT'
 AUTHOR = 'Civa Lin'

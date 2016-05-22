@@ -34,16 +34,10 @@ from . import itemselector as IS
 from . import utils
 
 
-class NoteInfo():
-    """A note info warper"""
-    def __init__(self, path, rootdir, ignore_patterns):
+class PathInfo():
+    def __init__(self, path, rootdir):
         self.path = path
         self.rootdir = rootdir
-        self.ignore_patterns = ignore_patterns
-
-    @property
-    def title(self):
-        return self.path.stem
 
     @property
     def filename(self):
@@ -85,6 +79,29 @@ class NoteInfo():
     def atime(self):
         return DT.datetime.fromtimestamp(self.path.stat().st_atime)
 
+    def get_properties(self):
+        return {
+            'filename': self.filename,
+            'parent_dirname': self.parent_dirname,
+            'absolute_path': self.absolute_path,
+            'root_relative_path': self.root_relative_path,
+            'root_relative_dirname': self.root_relative_dirname,
+            'top_dirname': self.top_dirname,
+            'mtime': self.mtime,
+            'atime': self.atime,
+            }
+
+
+class NoteInfo(PathInfo):
+    """A note info warper"""
+    def __init__(self, path, rootdir, ignore_patterns):
+        super().__init__(path, rootdir)
+        self.ignore_patterns = ignore_patterns
+
+    @property
+    def title(self):
+        return self.path.stem
+
     @property
     def prepend_resourced_icon(self):
         icon = '+ ' if utils.is_rmd(
@@ -111,20 +128,14 @@ class NoteInfo():
             return self.parent_dirname
 
     def get_properties(self):
-        return {
+        data = super().get_properties()
+        data.update({
             'title': self.title,
-            'filename': self.filename,
-            'parent_dirname': self.parent_dirname,
-            'absolute_path': self.absolute_path,
-            'root_relative_path': self.root_relative_path,
-            'root_relative_dirname': self.root_relative_dirname,
-            'top_dirname': self.top_dirname,
-            'mtime': self.mtime,
-            'atime': self.atime,
             'prepend_resourced_icon': self.prepend_resourced_icon,
             'append_resourced_icon': self.append_resourced_icon,
             'category': self.category,
-            }
+        })
+        return data
 
 
 def note_item_factory(path, rootdir, text_format,
