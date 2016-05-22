@@ -91,6 +91,12 @@ MIT LICENSE
 
 # Changelog
 
+## Version 1.4.1
+
+- Fixed: remove the auth check if no username and password in settings.
+
+
+
 ## Version 1.4.0
 
 - Fixed: a lot of bugs on windows platform.

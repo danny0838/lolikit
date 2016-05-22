@@ -54,21 +54,22 @@ def _mauth(method):
     """use: @mauth"""
     def decorator(self, *args, **kwargs):
         def pass_checker(username, password):
-            cfg_users = self.users
-            if cfg_users == '':
-                return True
-            else:
-                for up in cfg_users.split('\n'):
-                    u, p = up.split(':')
-                    if u == username:
-                        if p == password:
-                            return True
-                return False
+            for up in self.users.split('\n'):
+                u, p = up.split(':')
+                if u == username:
+                    if p == password:
+                        return True
+            return False
 
-        @functools.wraps(method)
-        @bottle.auth_basic(pass_checker)
-        def wrapper(*args, **kwargs):
-            return method(*args, **kwargs)
+        if self.users:
+            @functools.wraps(method)
+            @bottle.auth_basic(pass_checker)
+            def wrapper(*args, **kwargs):
+                return method(*args, **kwargs)
+        else:
+            @functools.wraps(method)
+            def wrapper(*args, **kwargs):
+                return method(*args, **kwargs)
 
         return wrapper(self, *args, **kwargs)
 
