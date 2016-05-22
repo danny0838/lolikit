@@ -120,13 +120,15 @@ def get_default_opener():
 
 
 @functools.lru_cache(maxsize=None)
-def is_rmd(path):
+def is_rmd(path, rootdir, ignore_patterns):
     """test the path is a resourced md path or not"""
     if all((
         path.is_file(),
         path.match('*.md'),
         all(False for p2 in path.parent.rglob('*.md') if p2 != path),
-        any(True for p2 in get_resource_paths(path)),
+        any(True for p2
+            in filted_ignore(get_resource_paths(path),
+                             rootdir, ignore_patterns)),
             )):
         return True
     else:
@@ -152,10 +154,15 @@ def get_opener_command(opener, path):
 
 
 def filted_ignore(paths, rootdir, ignore_patterns):
-    ignore_progs = [
-        re.compile(pattern.strip()) for pattern
-        in ignore_patterns.split('\n')
-        if pattern.strip()]
+    @functools.lru_cache(maxsize=None)
+    def get_ignore_progs(ignore_patterns):
+        ignore_progs = [
+            re.compile(pattern.strip()) for pattern
+            in ignore_patterns.split('\n')
+            if pattern.strip()]
+        return ignore_progs
+
+    ignore_progs = get_ignore_progs(ignore_patterns)
     return [path for path in paths
             if not any(
                 prog.search(str(path.relative_to(rootdir)))

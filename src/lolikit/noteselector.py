@@ -36,9 +36,10 @@ from . import utils
 
 class NoteInfo():
     """A note info warper"""
-    def __init__(self, path, rootdir):
+    def __init__(self, path, rootdir, ignore_patterns):
         self.path = path
         self.rootdir = rootdir
+        self.ignore_patterns = ignore_patterns
 
     @property
     def title(self):
@@ -86,7 +87,8 @@ class NoteInfo():
 
     @property
     def prepend_resourced_icon(self):
-        icon = '+ ' if utils.is_rmd(self.path) else '  '
+        icon = '+ ' if utils.is_rmd(
+            self.path, self.rootdir, self.ignore_patterns) else '  '
         if sys.platform.startswith('win'):
             return icon
         else:
@@ -94,7 +96,8 @@ class NoteInfo():
 
     @property
     def append_resourced_icon(self):
-        icon = ' +' if utils.is_rmd(self.path) else '  '
+        icon = ' +' if utils.is_rmd(
+            self.path, self.rootdir, self.ignore_patterns) else '  '
         if sys.platform.startswith('win'):
             return icon
         else:
@@ -102,7 +105,7 @@ class NoteInfo():
 
     @property
     def category(self):
-        if utils.is_rmd(self.path):
+        if utils.is_rmd(self.path, self.rootdir, self.ignore_patterns):
             return self.grandparent_dirname
         else:
             return self.parent_dirname
@@ -126,6 +129,8 @@ class NoteInfo():
 
 def note_item_factory(path, rootdir, text_format,
                       default_editor, default_file_browser, config):
+    ignore_patterns = config['project']['ignore_patterns']
+
     def text_func(data):
         return text_format.format(**data.get_properties())
 
@@ -171,14 +176,14 @@ def note_item_factory(path, rootdir, text_format,
         if task_mode in ('open', 'file_browsing'):
             return call_opener(task_mode, opener)
         elif task_mode == 'attachment_browsing':
-            if utils.is_rmd(data.path):
+            if utils.is_rmd(data.path, rootdir, ignore_patterns):
                 start_attachment_selector(data, config)
             else:
                 print('[cancel]: "{}" not a resourced note.'.format(
                     data.title))
             return False
 
-    noteinfo = NoteInfo(path, rootdir)
+    noteinfo = NoteInfo(path, rootdir, ignore_patterns)
     return IS.Item(text=text_func, task=task, data=noteinfo)
 
 

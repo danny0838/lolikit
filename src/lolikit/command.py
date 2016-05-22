@@ -25,7 +25,6 @@
 
 
 import abc
-import re
 import sys
 
 from . import utils
@@ -90,9 +89,10 @@ class Command(metaclass=abc.ABCMeta):
             paths, self.rootdir, self.config['project']['ignore_patterns'])
 
     def get_all_resourced_md_paths(self):
-        paths = [p for p in self.rootdir.rglob('*.md') if utils.is_rmd(p)]
-        return utils.filted_ignore(
-            paths, self.rootdir, self.config['project']['ignore_patterns'])
+        ignore_patterns = self.config['project']['ignore_patterns']
+        paths = [p for p in self.rootdir.rglob('*.md')
+                 if utils.is_rmd(p, self.rootdir, ignore_patterns)]
+        return utils.filted_ignore(paths, self.rootdir, ignore_patterns)
 
     def require_rootdir(self):
         if self.rootdir is None:

@@ -95,6 +95,7 @@ MIT LICENSE
 
 - Fixed: a lot of bugs on windows platform.
 - Fixed: `loli show` cause zero division when current project folder is empty.
+- Fixed: selector recognize resourced note not consider the ignore patterns.
 - Tweaked: `loli dig` rename to `loli do` and change the API. Make user working on special file or directory easily.
 - Tweaked: `loli fix` rename to `loli check`. And the `fix` section in configuration also be moved to `check` section too.
 - Enhanced: slight improve the `loli show` result.
