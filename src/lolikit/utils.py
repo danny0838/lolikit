@@ -55,16 +55,18 @@ def get_rootdir_from_parents(current_dir):
             return None
 
 
+def get_user_lolikitrc_path():
+    user_lolikitrc = pathlib.Path(
+        os.path.expanduser('~')) / '.lolikitrc'
+    return user_lolikitrc
+
+
+def get_project_lolikitrc_path(rootdir):
+    project_lolikitrc = rootdir / '.loli' / 'lolikitrc'
+    return project_lolikitrc
+
+
 def get_config(rootdir=None):
-    def get_user_lolikitrc_path():
-        user_lolikitrc = pathlib.Path(
-            os.path.expanduser('~')) / '.lolikitrc'
-        return user_lolikitrc
-
-    def get_project_lolikitrc_path(rootdir):
-        project_lolikitrc = rootdir / '.loli' / 'lolikitrc'
-        return project_lolikitrc
-
     def read_config(rootdir):
         config = configparser.ConfigParser()
         config.read_dict(defaultconfig.DEFAULT_CONFIG)
