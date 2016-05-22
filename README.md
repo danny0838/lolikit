@@ -93,17 +93,18 @@ MIT LICENSE
 
 ## Version 1.4.0
 
-- Fixed: a lot of bugs work with windows platform.
+- Fixed: a lot of bugs on windows platform.
 - Fixed: `loli show` cause zero division when current project folder is empty.
 - Tweaked: `loli dig` rename to `loli do` and change the API. Make user working on special file or directory easily.
-- Tweaked: `loli fix` rename to `loli check`. And the `fix` section in configure files also move to `check` section too.
-- Enhanced: beautify `loli show` result.
+- Tweaked: `loli fix` rename to `loli check`. And the `fix` section in configuration also be moved to `check` section too.
+- Enhanced: slight improve the `loli show` result.
 - Enhanced: `loli find` now support path filtering.
 - Added: Bash completion support.
 - Added: `loli config` help user to access their's configure easily.
 - Added: `loli init` help user to create a new loli project.
-- Added: `loli serve` command can startup a build-in mini web server and render markdown to html. (use commonmark spec.)
-    - Fully support text-based web browser. (e.g., [w3m](http://w3m.sourceforge.net/))
+- Added: `loli serve` command can startup a build-in mini web server and render a loli project to a website. (use commonmark spec.)
+    - read only currently.
+    - support text-based web browser. (e.g., [w3m](http://w3m.sourceforge.net/))
 
 
 
