@@ -80,9 +80,9 @@ _lolikit_bash_completion()
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         fi
 
-    # elif [[ ${subcommand} == list ]] ; then
-    #     opts="--help"
-    #     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    elif [[ ${subcommand} == list ]] ; then
+        opts="--dir"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     # elif [[ ${subcommand} == show ]] ; then
     #     opts="--help"

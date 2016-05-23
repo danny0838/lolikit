@@ -243,13 +243,20 @@ class HelpCommand(command.Command):
             (default: "{default[selector][list_format]}")
 
 
+
+            #### list_dir_format ####
+
+            Define the output format with "list --dir" command.
+
+            (default: "{default[selector][list_dir_format]}")
+
+
             -----------------------------------------------------------------
 
             > Special hint:
             >
             > You can use following variables in *_format:
             >
-            >   - {{title}}
             >   - {{filename}}
             >   - {{parent_dirname}}
             >   - {{absolute_path}}
@@ -258,6 +265,10 @@ class HelpCommand(command.Command):
             >   - {{top_dirname}}
             >   - {{mtime}}
             >   - {{atime}}
+            >
+            > Following variables can be used in list_format & find_format:
+            >
+            >   - {{title}}
             >   - {{prepend_resourced_icon}}
             >   - {{append_resourced_icon}}
             >   - {{category}}

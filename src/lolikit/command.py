@@ -79,7 +79,7 @@ class Command(metaclass=abc.ABCMeta):
         pass
 
     def get_all_dir_paths(self):
-        paths = self.rootdir.rglob('**')
+        paths = self.rootdir.rglob('*/**')
         return utils.filted_ignore(
             paths, self.rootdir, self.config['project']['ignore_patterns'])
 

@@ -91,6 +91,12 @@ MIT LICENSE
 
 # Changelog
 
+## Version 1.4.3
+
+- Added: `loli list -d` to list all directories by modified time.
+
+
+
 ## Version 1.4.2
 
 - Fixed: `loli serve` path == "/source/" not work.

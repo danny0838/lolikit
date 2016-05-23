@@ -31,6 +31,7 @@ import os
 
 from setuptools import setup
 from setuptools.command.install import install as _install
+from setuptools.command.develop import develop as _develop
 from pkg_resources import Requirement, resource_filename
 
 import src.lolikit.info as info
@@ -40,7 +41,7 @@ if not sys.version_info >= (3, 4, 0):
     sys.exit(1)
 
 
-def _post_install(dir):
+def _post_install():
     if sys.platform.startswith('linux'):
         src_path = resource_filename(
             Requirement.parse(info.PROJECT_NAME),
@@ -48,19 +49,38 @@ def _post_install(dir):
                          "data", "completion", "lolikit.bash-completion"))
         dst_path = os.path.join(
             '/etc', 'bash_completion.d', 'lolikit.bash-completion')
-        if os.path.exists(dst_path):
+        if os.path.exists(dst_path) or os.path.islink(dst_path):
             os.remove(dst_path)
-            try:
-                os.symlink(src_path, dst_path)
-            except:
-                pass
+        try:
+            os.symlink(src_path, dst_path)
+        except:
+            pass
+
+
+def _post_uninstall():
+    if sys.platform.startswith('linux'):
+        dst_path = os.path.join(
+            '/etc', 'bash_completion.d', 'lolikit.bash-completion')
+        if os.path.exists(dst_path) or os.path.islink(dst_path):
+            os.remove(dst_path)
 
 
 class install(_install):
     def run(self):
         _install.run(self)
-        self.execute(_post_install, (self.install_lib,),
+        self.execute(_post_install, args=tuple(),
                      msg="Running post install task")
+
+
+class develop(_develop):
+    def run(self):
+        _develop.run(self)
+        if self.uninstall:
+            self.execute(_post_uninstall, args=tuple(),
+                         msg="Running post develop -u task")
+        else:
+            self.execute(_post_install, args=tuple(),
+                         msg="Running post develop task")
 
 setup(
     name=info.PROJECT_NAME,
@@ -89,5 +109,6 @@ setup(
         'setuptools.installation': ['eggsecutable = lolikit.cmdline:main']
         },
     keywords='notes-manager',
-    cmdclass={'install': install},
+    cmdclass={'install': install,
+              'develop': develop},
 )

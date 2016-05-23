@@ -76,6 +76,8 @@ DEFAULT_CONFIG = OD((
         ('find_format', '{prepend_resourced_icon}{title}  <<  {category}'),
         ('list_format',
             '[{mtime:%%m/%%d %%H:%%M}] {prepend_resourced_icon}{title}'),
+        ('list_dir_format',
+            '[{mtime:%%m/%%d %%H:%%M}] {filename}/'),
         ))),
     ('check', OD((
         ('danger_pathname_chars', '\\/:"*?<>|'),

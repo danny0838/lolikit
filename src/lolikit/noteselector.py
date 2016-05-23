@@ -27,6 +27,7 @@ import datetime as DT
 import subprocess
 import re
 import sys
+import os
 
 import termcolor as TC
 
@@ -59,13 +60,29 @@ class PathInfo():
     def absolute_parent_dirpath(self):
         return str(self.path.parent.resolve())
 
+    def __compact_convert(self, path):
+        parts = path.parts
+        if len(parts) >= 3:
+            return os.path.sep.join([parts[0], '...', parts[-1]])
+        else:
+            return str(path)
+
     @property
     def root_relative_path(self):
         return str(self.path.relative_to(self.rootdir))
 
     @property
+    def root_relative_path_compact(self):
+        return self.__compact_convert(self.path.relative_to(self.rootdir))
+
+    @property
     def root_relative_dirname(self):
         return str(self.path.relative_to(self.rootdir).parent)
+
+    @property
+    def root_relative_dirname_compact(self):
+        return self.__compact_convert(
+            self.path.relative_to(self.rootdir).parent)
 
     @property
     def top_dirname(self):
@@ -89,6 +106,9 @@ class PathInfo():
             'top_dirname': self.top_dirname,
             'mtime': self.mtime,
             'atime': self.atime,
+            'root_relative_path_compact': self.root_relative_path_compact,
+            'root_relative_dirname_compact':
+                self.root_relative_dirname_compact,
             }
 
 
@@ -237,7 +257,7 @@ def start_attachment_selector(noteinfo, config):
         '\n'
         'How to use\n'
         '==================================================\n'
-        '## Open a attach ##\n'
+        '## Open a attachment ##\n'
         '    <number>               => e.g., 9\n'
         '    <number> @             => e.g., 9@\n'
         '        - open file with default program\n'
